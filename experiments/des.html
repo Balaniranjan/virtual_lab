@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 03: Data Encryption Standard (DES) - 16-round Feistel network visualization, S-box non-linearity, key schedule, encryption, and decryption simulation.">
+  <title>Experiment 03: Data Encryption Standard (DES) - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">03. Data Encryption Standard (DES)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Header -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 03</span>
+          <span class="experiment-category-badge">Symmetric Encryption</span>
+        </div>
+        <h1 class="experiment-title">Data Encryption Standard (DES): Feistel Architecture & Round Analysis</h1>
+        <p class="experiment-desc">
+          Inspect the inner mechanisms of the 64-bit block cipher: initial permutation, 16 Feistel round transformations, S-box non-linear substitutions, subkey expansion, and inverse final permutation.
+        </p>
+      </div>
+
+      <!-- Deprecation Notice -->
+      <div class="legacy-warning-alert">
+        <span class="legacy-warning-badge">Legacy Standard (Withdrawn)</span>
+        <div>
+          <strong>Obsolescence Notice:</strong> Single DES provides only a 56-bit effective key space (2^56 keys), which is trivially vulnerable to modern exhaustive brute-force search. It was withdrawn by NIST in 2005 and is taught solely to understand Feistel cipher structures.
+        </div>
+      </div>
+
+      <!-- 8-Tab Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To analyze and trace the internal architecture of the Data Encryption Standard (DES), deconstructing the 64-bit block Feistel rounds, 48-bit subkey derivation, 8 non-linear S-boxes, and evaluating the cryptanalytic reasons for its modern retirement.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Understand the 64-bit block structure and 56-bit effective key size.</li>
+            <li>Trace Initial Permutation (IP), 16 Feistel rounds (L_i, R_i, K_i), and Final Permutation (FP).</li>
+            <li>Analyze the round function f(R, K): Expansion (E), XOR addition, 8 S-boxes, and Permutation (P).</li>
+            <li>Verify known test vectors from NIST Special Publication 800-20.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Principles of DES</h2>
+
+          <h3 class="mt-6 mb-3">1. Architectural Overview</h3>
+          <p>
+            Adopted in 1977 as FIPS PUB 46, DES is a symmetric block cipher that processes data in <strong>64-bit blocks</strong> under the control of a <strong>64-bit key</strong>. The key contains 8 parity check bits (bits 8, 16, 24, 32, 40, 48, 56, 64), leaving <strong>56 effective secret key bits</strong>.
+          </p>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. The Feistel Cipher Structure</h3>
+          <p>
+            DES is built on Horst Feistel's network architecture. The 64-bit block is permuted by an Initial Permutation (IP) and then split into two 32-bit halves: <code>L_0</code> and <code>R_0</code>.
+          </p>
+          <div class="visualizer-container">
+            <p><strong>Round Formulation (Rounds 1 to 16):</strong></p>
+            <p><code>L_i = R_{i-1}</code></p>
+            <p><code>R_i = L_{i-1} &oplus; f(R_{i-1}, K_i)</code></p>
+            <p>Where <code>&oplus;</code> denotes bitwise XOR, and <code>K_i</code> is the 48-bit subkey derived for round <code>i</code>.</p>
+            <p>
+              After Round 16, the halves are swapped in reverse order (<code>R_16 || L_16</code>) and passed through the Final Permutation (<code>FP = IP^{-1}</code>).
+            </p>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>3. The Feistel Round Function f(R, K)</h3>
+          <p>The round function <code>f(R, K)</code> executes four precise transformations on the 32-bit right half <code>R</code>:</p>
+          <ol style="margin-left: var(--space-4); line-height: 1.8;">
+            <li><strong>Expansion Permutation (E):</strong> Expands 32 bits into 48 bits by duplicating selected bits.</li>
+            <li><strong>Key Addition:</strong> Bitwise XOR of the 48 expanded bits with the 48-bit round subkey <code>K_i</code>.</li>
+            <li><strong>Substitution (S-Boxes):</strong> The 48 bits are partitioned into eight 6-bit chunks. Each 6-bit chunk enters one of eight non-linear S-boxes (<code>S_1</code> to <code>S_8</code>). Bits 1 and 6 define the row (0 to 3), and bits 2 through 5 define the column (0 to 15), outputting 4 bits. This yields <code>8 &times; 4 = 32</code> bits.</li>
+            <li><strong>Permutation (P):</strong> Permutes the 32 bits from the S-boxes to achieve diffusion.</li>
+          </ol>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>4. Why Feistel Ciphers are Invertible</h3>
+          <p>
+            A major mathematical elegance of the Feistel design is that the round function <code>f(R, K)</code> does <strong>not</strong> need to be invertible. Decryption runs the exact same Feistel rounds in identical sequence, merely applying the subkeys in reverse order (<code>K_{16}, K_{15}, ..., K_1</code>).
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>Select your input mode: <strong>ASCII Text</strong> or <strong>Hexadecimal (16 hex chars per block)</strong>.</li>
+            <li>Enter your input data in the Input Block field.</li>
+            <li>Provide a 64-bit key (represented as 16 hexadecimal characters, e.g. <code>133457799BBCDFF1</code>).</li>
+            <li>Click <strong>Encrypt with DES</strong>.</li>
+            <li>Examine the generated 64-bit ciphertext output and inspect the <strong>16-Round Feistel Visualizer</strong> on the right.</li>
+            <li>Inspect how each round generates subkey <code>K_i</code>, computes <code>f(R, K)</code>, and updates <code>L_i</code> and <code>R_i</code>.</li>
+            <li>Click <strong>Decrypt with DES</strong> to reverse the process and recover the original plaintext.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="desPretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>NIST Known-Answer Vector Demonstration</h2>
+          <p>This canonical test vector from NIST SP 800-20 validates the mathematical correctness of our educational DES engine:</p>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-6); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600); margin-top: var(--space-4);">
+            <div style="font-family: var(--font-mono); font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px;">
+              <div><strong>Plaintext (Hex):</strong> <code>0123456789ABCDEF</code></div>
+              <div><strong>Key (Hex):</strong> <code>133457799BBCDFF1</code></div>
+              <div><strong>Initial Permutation (IP):</strong> <code>CC00CCFF F0AAF0AA</code></div>
+              <div><strong>Round 1 Subkey (K_1):</strong> <code>1B02EFFC7072</code></div>
+              <div><strong>Round 1 (L_1, R_1):</strong> <code>F0AAF0AA, 52FF52FF</code></div>
+              <div><strong>Round 16 (L_16, R_16):</strong> <code>43423234, 0A4CD995</code></div>
+              <div><strong>Output after FP (Ciphertext):</strong> <code style="color:var(--primary-700); font-weight:700;">85E813540F0AB405</code></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE WORKSPACE)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+        <div class="exp-workspace-grid">
+
+          <!-- Left Controls -->
+          <div class="exp-panel">
+            <div class="exp-panel-header">
+              <h3 class="exp-panel-title">DES Simulator Controls</h3>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="resetDES()">Reset</button>
+            </div>
+
+            <div id="desAlertContainer"></div>
+
+            <div class="form-group">
+              <label class="form-label">Input Mode</label>
+              <div class="d-flex gap-4">
+                <label class="d-flex align-items-center gap-1" style="cursor: pointer;">
+                  <input type="radio" name="desInputMode" value="hex" checked onchange="toggleDESMode()">
+                  <span>Hexadecimal (16 hex chars = 64 bits)</span>
+                </label>
+                <label class="d-flex align-items-center gap-1" style="cursor: pointer;">
+                  <input type="radio" name="desInputMode" value="text" onchange="toggleDESMode()">
+                  <span>ASCII Text</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="desInputData">Input Data Block</label>
+              <input type="text" id="desInputData" class="form-input form-mono" value="0123456789ABCDEF">
+              <span class="form-hint" id="desInputHint">16 hexadecimal characters (64 bits).</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="desKeyData">Secret Key (64-bit Hex)</label>
+              <input type="text" id="desKeyData" class="form-input form-mono" value="133457799BBCDFF1">
+              <span class="form-hint">16 hex characters. 8 bits are parity bits, yielding 56 effective bits.</span>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+              <button type="button" class="btn btn-primary" onclick="runDESEncrypt()" style="flex:1;">
+                Encrypt with DES
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="runDESDecrypt()" style="flex:1;">
+                Decrypt with DES
+              </button>
+            </div>
+
+            <div class="form-group mt-6">
+              <label class="form-label" for="desOutputHex">Ciphertext (Hexadecimal)</label>
+              <div class="input-with-action">
+                <input type="text" id="desOutputHex" class="form-input form-mono" readonly>
+                <button type="button" class="copy-btn" onclick="MainApp.copyToClipboard('desOutputHex')">Copy</button>
+              </div>
+            </div>
+
+            <div class="form-group" id="desRecoveredTextGroup" style="display:none;">
+              <label class="form-label" for="desRecoveredText">Recovered ASCII Text</label>
+              <input type="text" id="desRecoveredText" class="form-input form-mono" readonly>
+            </div>
+          </div>
+
+          <!-- Right: 16 Feistel Rounds Visualizer -->
+          <div class="exp-panel">
+            <div class="exp-panel-header">
+              <h3 class="exp-panel-title">16-Round Feistel Breakdown</h3>
+              <span class="badge badge-primary">FIPS 46-3</span>
+            </div>
+
+            <div class="visualizer-container" style="background:#ffffff;">
+              <div id="desPermutationHeader" style="font-family:var(--font-mono); font-size:0.8rem; margin-bottom:var(--space-3); color:var(--text-muted);">
+                Awaiting execution to display Initial Permutation (IP) and rounds...
+              </div>
+
+              <!-- Feistel round scroll list -->
+              <div class="feistel-rounds-list" id="desFeistelRoundsList">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="desPosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>National Bureau of Standards.</strong> <em>Data Encryption Standard (DES)</em>, FIPS PUB 46-3. National Institute of Standards and Technology (NIST), 1999.
+            </li>
+            <li>
+              <strong>NIST Special Publication 800-20.</strong> <em>Modes of Operation Validation System for the Triple Data Encryption Algorithm (TDEA)</em>. NIST, 2000.
+            </li>
+            <li>
+              <strong>Electronic Frontier Foundation.</strong> <em>Cracking DES: Secrets of Encryption Research, Wiretap Politics & Chip Design</em>. O'Reilly & Associates, 1998.
+            </li>
+            <li>
+              <strong>William Stallings.</strong> <em>Cryptography and Network Security</em> (8th Edition), Chapter 3: Block Ciphers and the Data Encryption Standard. Pearson, 2020.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Pagination Footer -->
+      <div class="exp-pagination-nav">
+        <a href="transposition.html" class="exp-nav-btn">
+          ← Previous: 02. Transposition Techniques
+        </a>
+        <a href="aes.html" class="exp-nav-btn">
+          Next: 04. AES Algorithm →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/des.js"></script>
+
+  <script>
+    function toggleDESMode() {
+      const mode = document.querySelector('input[name="desInputMode"]:checked').value;
+      const hint = document.getElementById('desInputHint');
+      const input = document.getElementById('desInputData');
+      if (mode === 'hex') {
+        hint.textContent = '16 hexadecimal characters (64 bits).';
+        input.value = '0123456789ABCDEF';
+      } else {
+        hint.textContent = 'ASCII text (8 characters = 64-bit block).';
+        input.value = 'SECURITY';
+      }
+    }
+
+    function runDESEncrypt() {
+      Validation.clearError('desAlertContainer');
+      const mode = document.querySelector('input[name="desInputMode"]:checked').value;
+      const input = document.getElementById('desInputData').value;
+      const key = document.getElementById('desKeyData').value.replace(/[^0-9A-Fa-f]/g, '');
+
+      if (!input.trim()) {
+        Validation.showError('desAlertContainer', 'Please provide input data.');
+        return;
+      }
+      if (key.length !== 16) {
+        Validation.showError('desAlertContainer', 'DES Key must be exactly 16 hexadecimal characters (64 bits).');
+        return;
+      }
+
+      const res = DES.encrypt(input, key, mode === 'hex');
+      document.getElementById('desOutputHex').value = res.ciphertextHex;
+      document.getElementById('desRecoveredTextGroup').style.display = 'none';
+
+      renderDESRounds(res.firstBlockDetails);
+      MainApp.showToast('DES encryption completed.');
+    }
+
+    function runDESDecrypt() {
+      Validation.clearError('desAlertContainer');
+      const cipherHex = document.getElementById('desInputData').value.replace(/[^0-9A-Fa-f]/g, '');
+      const key = document.getElementById('desKeyData').value.replace(/[^0-9A-Fa-f]/g, '');
+
+      if (!cipherHex) {
+        Validation.showError('desAlertContainer', 'Please provide hexadecimal ciphertext to decrypt.');
+        return;
+      }
+      if (key.length !== 16) {
+        Validation.showError('desAlertContainer', 'DES Key must be exactly 16 hexadecimal characters (64 bits).');
+        return;
+      }
+
+      const res = DES.decrypt(cipherHex, key);
+      document.getElementById('desOutputHex').value = res.plaintextHex;
+
+      if (res.plaintextAscii) {
+        document.getElementById('desRecoveredText').value = res.plaintextAscii;
+        document.getElementById('desRecoveredTextGroup').style.display = 'block';
+      }
+
+      renderDESRounds(res.firstBlockDetails, true);
+      MainApp.showToast('DES decryption completed.');
+    }
+
+    function renderDESRounds(blockDetails, isDecrypt = false) {
+      if (!blockDetails) return;
+
+      const header = document.getElementById('desPermutationHeader');
+      header.innerHTML = `
+        <div><strong>Input:</strong> <code>${blockDetails.inputHex}</code> | <strong>Key:</strong> <code>${blockDetails.keyHex}</code></div>
+        <div><strong>Initial Permutation (IP):</strong> <code>${blockDetails.initialPermHex}</code></div>
+      `;
+
+      const list = document.getElementById('desFeistelRoundsList');
+      let html = '';
+
+      blockDetails.rounds.forEach(r => {
+        html += `
+          <div class="feistel-round-card">
+            <div class="feistel-round-header">
+              <span>Round ${r.round} of 16</span>
+              <span class="badge badge-neutral" style="font-size:0.7rem;">Subkey K_${r.round}: ${r.roundKeyHex}</span>
+            </div>
+            <div class="feistel-round-body">
+              <div class="feistel-value-box">
+                <span>L_${r.round - 1}:</span>
+                <code>${r.L_hex}</code>
+              </div>
+              <div class="feistel-value-box">
+                <span>R_${r.round - 1}:</span>
+                <code>${r.R_hex}</code>
+              </div>
+              <div class="feistel-value-box">
+                <span>f(R, K):</span>
+                <code>${r.fOut_hex}</code>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      list.innerHTML = html;
+    }
+
+    function resetDES() {
+      document.querySelector('input[name="desInputMode"][value="hex"]').checked = true;
+      document.getElementById('desInputData').value = '0123456789ABCDEF';
+      document.getElementById('desKeyData').value = '133457799BBCDFF1';
+      document.getElementById('desOutputHex').value = '';
+      document.getElementById('desRecoveredTextGroup').style.display = 'none';
+      Validation.clearError('desAlertContainer');
+      document.getElementById('desPermutationHeader').innerHTML = 'Awaiting execution to display Initial Permutation (IP) and rounds...';
+      document.getElementById('desFeistelRoundsList').innerHTML = '';
+      runDESEncrypt();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      QuizEngine.renderQuiz('des', 'pretest', 'desPretestContainer');
+      QuizEngine.renderQuiz('des', 'posttest', 'desPosttestContainer');
+      runDESEncrypt();
+    });
+  </script>
+</body>
+</html>

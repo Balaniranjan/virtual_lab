@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Principles of Cryptography Virtual Lab - Interactive college-level simulations for classical ciphers, DES, AES, RSA, Diffie-Hellman, SHA-1, MD5, and Digital Signatures.">
+  <title>Principles of Cryptography Virtual Lab</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/experiments.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Academic Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link" aria-label="Home">
+        <div class="brand-logo-icon">
+          <!-- Original Cryptography Emblem: Shield with Keyhole & Node Orbit -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <!-- Primary Navigation -->
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="introduction.html" class="nav-link">Introduction</a>
+        <a href="objectives.html" class="nav-link">Objectives</a>
+        <a href="experiments.html" class="nav-link">Experiments</a>
+        <a href="resources.html" class="nav-link">Resources</a>
+        <a href="feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <!-- Search Trigger & Mobile Toggle -->
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Hero Section -->
+      <section class="card mb-10" style="padding: var(--space-10) var(--space-8); background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); position: relative; overflow: hidden; border-top: 4px solid var(--primary-600);">
+        <div style="display: grid; grid-template-columns: 1.25fr 0.95fr; gap: var(--space-8); align-items: center;">
+          <div>
+            <span class="badge badge-primary mb-3">University Virtual Laboratory</span>
+            <h1 style="font-size: 2.5rem; margin-bottom: var(--space-4); line-height: 1.2; color: var(--text-main);">
+              Principles of Cryptography Virtual Lab
+            </h1>
+            <p class="academic-lead" style="font-size: 1.15rem; color: var(--text-muted); margin-bottom: var(--space-6);">
+              Explore the mathematics and mechanisms behind encryption, decryption, hashing, key exchange, and digital signatures through interactive experiments.
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+              <a href="experiments.html" class="btn btn-primary btn-lg">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                </svg>
+                Explore Experiments
+              </a>
+              <a href="introduction.html" class="btn btn-secondary btn-lg">
+                Learn the Fundamentals
+              </a>
+            </div>
+          </div>
+
+          <!-- Original Cryptography Illustration: Plaintext -> Feistel/Cipher Matrix -> Ciphertext -->
+          <div style="background-color: #0f172a; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-lg); border: 1px solid #1e293b; color: #e2e8f0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: var(--space-3); margin-bottom: var(--space-4);">
+              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #38bdf8;">CIPHER ENGINE INTERACTIVE PIPELINE</span>
+              <span class="badge badge-cyan" style="font-size: 0.65rem;">STATE: ONLINE</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: var(--space-3); font-family: var(--font-mono); font-size: 0.85rem;">
+              <div style="background: rgba(255,255,255,0.05); padding: 0.5rem 0.75rem; border-radius: 6px; border-left: 3px solid #3b82f6;">
+                <span style="color: #94a3b8; font-size: 0.75rem; display: block;">PLAINTEXT INPUT [P]:</span>
+                <span style="color: #60a5fa;">"ATTACK AT DAWN 0600Z"</span>
+              </div>
+
+              <div style="text-align: center; color: #38bdf8; font-size: 0.8rem; padding: 2px 0;">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
+                <span>TRANSFORMATION [E_k(P) mod 26 / AES / RSA / DSS]</span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; text-align: center; font-size: 0.75rem;">
+                <div style="background: #1e293b; padding: 4px; border-radius: 4px; border: 1px solid #334155;">SubBytes</div>
+                <div style="background: #1e293b; padding: 4px; border-radius: 4px; border: 1px solid #334155;">ShiftRows</div>
+                <div style="background: #1e293b; padding: 4px; border-radius: 4px; border: 1px solid #334155;">MixColumns</div>
+                <div style="background: #1e293b; padding: 4px; border-radius: 4px; border: 1px solid #334155;">AddRoundKey</div>
+              </div>
+
+              <div style="text-align: center; color: #10b981; font-size: 0.8rem; padding: 2px 0;">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
+              </div>
+
+              <div style="background: rgba(16, 185, 129, 0.1); padding: 0.5rem 0.75rem; border-radius: 6px; border-left: 3px solid #10b981;">
+                <span style="color: #a7f3d0; font-size: 0.75rem; display: block;">AUTHENTICATED CIPHERTEXT [C]:</span>
+                <span style="color: #34d399; word-break: break-all;">85E813540F0AB405... [AUTH_TAG: VALID]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Learning Areas Overview -->
+      <section class="mb-10">
+        <div style="margin-bottom: var(--space-6);">
+          <h2>Key Cryptographic Disciplines</h2>
+          <p>The virtual laboratory is organized into three foundational study domains aligned with modern CSE curricula.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6);">
+          <!-- Area 1 -->
+          <div class="card card-interactive">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--primary-50); color: var(--primary-600); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              </svg>
+            </div>
+            <h3 style="margin-bottom: var(--space-2);">Classical Cryptography</h3>
+            <p style="font-size: 0.925rem; color: var(--text-muted); margin-bottom: var(--space-4);">
+              Study the historical evolution of secrecy through substitution ciphers (Caesar, Playfair, Hill) and transposition ciphers (Rail Fence Row and Column Major).
+            </p>
+            <a href="experiments/classical-ciphers.html" style="font-weight: 600; font-size: 0.9rem;">View Classical Ciphers →</a>
+          </div>
+
+          <!-- Area 2 -->
+          <div class="card card-interactive">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--cyan-50); color: var(--cyan-700); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <h3 style="margin-bottom: var(--space-2);">Modern Cryptographic Algorithms</h3>
+            <p style="font-size: 0.925rem; color: var(--text-muted); margin-bottom: var(--space-4);">
+              Investigate industrial standards including Feistel-based DES, Rijndael AES-GCM block encryption, RSA modular factorization, and Diffie-Hellman key exchange.
+            </p>
+            <a href="experiments/aes.html" style="font-weight: 600; font-size: 0.9rem;">View Modern Ciphers →</a>
+          </div>
+
+          <!-- Area 3 -->
+          <div class="card card-interactive">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: #ecfdf5; color: #065f46; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+              </svg>
+            </div>
+            <h3 style="margin-bottom: var(--space-2);">Hashing & Signatures</h3>
+            <p style="font-size: 0.925rem; color: var(--text-muted); margin-bottom: var(--space-4);">
+              Examine one-way hash digests (SHA-1, MD5), analyze avalanche properties, and evaluate digital signature authentication and non-repudiation (DSS & ECDSA).
+            </p>
+            <a href="experiments/digital-signature.html" style="font-weight: 600; font-size: 0.9rem;">View Signatures & Hashes →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experiment Directory Preview (All 9 Experiments) -->
+      <section class="mb-10">
+        <div class="d-flex justify-content-between align-items-center mb-6 flex-wrap gap-3">
+          <div>
+            <h2>Standard Laboratory Experiments</h2>
+            <p>Nine comprehensive experiments structured according to national academic virtual laboratory standards.</p>
+          </div>
+          <a href="experiments.html" class="btn btn-outline-primary">
+            View All Experiments & Filters →
+          </a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6);" id="homeExperimentsGrid">
+          <!-- Populated with all 9 experiments -->
+        </div>
+      </section>
+
+      <!-- Guided Learning Workflow -->
+      <section class="card mb-10" style="padding: var(--space-8); background-color: #ffffff;">
+        <h2 style="text-align: center; margin-bottom: var(--space-2);">Educational Experiment Workflow</h2>
+        <p style="text-align: center; max-width: 700px; margin: 0 auto var(--space-8);">
+          Each experiment adheres to a rigorous, research-validated instructional methodology designed to foster deep conceptual understanding.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); text-align: center;">
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-full); background: var(--primary-600); color: #ffffff; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); font-weight: 700;">1</div>
+            <h4 style="margin-bottom: var(--space-2);">1. Learn Theory</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Review formal mathematical definitions, modular arithmetic, algorithm steps, and historical context.
+            </p>
+          </div>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-full); background: var(--cyan-600); color: #ffffff; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); font-weight: 700;">2</div>
+            <h4 style="margin-bottom: var(--space-2);">2. Observe Demo</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Walk through safe, pre-calculated canonical examples with highlighted intermediate states.
+            </p>
+          </div>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-full); background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); font-weight: 700;">3</div>
+            <h4 style="margin-bottom: var(--space-2);">3. Perform Practice</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Input custom keys, plaintexts, and vectors. Inspect matrix transformations and round outputs in real-time.
+            </p>
+          </div>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-full); background: #7c3aed; color: #ffffff; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); font-weight: 700;">4</div>
+            <h4 style="margin-bottom: var(--space-2);">4. Take Assessment</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Complete diagnostic pretests and post-experiment quizzes with immediate feedback and local score tracking.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Academic Accreditation & Course Alignment -->
+      <section class="card mb-10" style="padding: var(--space-8);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8);">
+          <div>
+            <h3>Course Alignment & Target Audience</h3>
+            <p>
+              This virtual lab is designed specifically for undergraduate and postgraduate students enrolled in:
+            </p>
+            <ul>
+              <li><strong>B.Tech / B.E. in Computer Science and Engineering</strong> (Semester 6/7)</li>
+              <li><strong>Information Security & Cybersecurity</strong> Specializations</li>
+              <li><strong>Master of Computer Applications (MCA)</strong> Cryptography Electives</li>
+              <li>Self-paced students preparing for GATE Computer Science (IT & Network Security)</li>
+            </ul>
+            <p style="font-size: 0.9rem; margin-top: var(--space-4);">
+              Aligned with standard curricula from AICTE, IEEE/ACM Cybersecurity Curricula, and university boards.
+            </p>
+          </div>
+
+          <div>
+            <h3>Recommended Prerequisites</h3>
+            <ul>
+              <li><strong>Discrete Mathematics:</strong> Modular arithmetic, prime numbers, greatest common divisor (Euclidean Algorithm), and matrix multiplication.</li>
+              <li><strong>Data Structures & Algorithms:</strong> Bitwise operations (AND, OR, XOR, shifts), time complexity analysis.</li>
+              <li><strong>Computer Networks Fundamentals:</strong> OSI reference model, network communication, and basic data integrity principles.</li>
+            </ul>
+            <div class="alert alert-info mt-4" style="margin-bottom: 0;">
+              <div class="alert-content">
+                <strong>No Registration Required:</strong> The lab is fully client-side and free to access for all students and educators. Progress is retained in your local browser cache.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Frequently Asked Questions -->
+      <section class="mb-10">
+        <h2 style="margin-bottom: var(--space-4);">Frequently Asked Questions</h2>
+        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+          <details class="card" style="padding: var(--space-4) var(--space-5); cursor: pointer;">
+            <summary style="font-weight: 600; color: var(--text-main);">Can these simulations run without an active internet connection?</summary>
+            <p style="margin-top: var(--space-3); font-size: 0.925rem; color: var(--text-muted);">
+              Yes. All algorithms (Caesar, Playfair, Hill, Rail Fence, DES, AES, RSA, Diffie-Hellman, SHA-1, MD5, and Digital Signatures) are implemented in pure client-side JavaScript and the native Web Crypto API. Once downloaded, the site runs locally in any modern browser without network dependency.
+            </p>
+          </details>
+
+          <details class="card" style="padding: var(--space-4) var(--space-5); cursor: pointer;">
+            <summary style="font-weight: 600; color: var(--text-main);">Why are legacy algorithms like DES and MD5 included?</summary>
+            <p style="margin-top: var(--space-3); font-size: 0.925rem; color: var(--text-muted);">
+              Understanding historical cryptography is essential for cybersecurity education. DES illustrates the fundamental principles of the Feistel network and S-box non-linearity that influenced AES, while MD5 demonstrates how collision vulnerabilities emerge when hash functions fail. Each legacy algorithm includes prominent warnings explaining why it is obsolete for modern security.
+            </p>
+          </details>
+
+          <details class="card" style="padding: var(--space-4) var(--space-5); cursor: pointer;">
+            <summary style="font-weight: 600; color: var(--text-main);">Does the lab substitute for production cryptographic libraries?</summary>
+            <p style="margin-top: var(--space-3); font-size: 0.925rem; color: var(--text-muted);">
+              No. This virtual laboratory is strictly an educational tool designed for visual and conceptual exploration. Real-world applications must use vetted, audited cryptographic libraries (such as OpenSSL, Web Crypto, libsodium) that provide constant-time execution and side-channel resistance.
+            </p>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1: Institutional Identity -->
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>
+            An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.
+          </p>
+          <div class="footer-config-info">
+            <div class="footer-config-row">
+              <span class="footer-config-label">Institution:</span>
+              <span class="footer-config-value" data-config="institution">[Department / College Name]</span>
+            </div>
+            <div class="footer-config-row">
+              <span class="footer-config-label">Department:</span>
+              <span class="footer-config-value" data-config="department">Department of Computer Science and Engineering</span>
+            </div>
+            <div class="footer-config-row">
+              <span class="footer-config-label">Coordinator:</span>
+              <span class="footer-config-value" data-config="coordinator">[Faculty Coordinator Name]</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="introduction.html">Introduction</a></li>
+            <li><a href="objectives.html">Objectives</a></li>
+            <li><a href="experiments.html">List of Experiments</a></li>
+            <li><a href="resources.html">Learning Resources</a></li>
+            <li><a href="feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Experiments Directory -->
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="experiments/classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="experiments/transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="experiments/des.html">03. DES Algorithm</a></li>
+            <li><a href="experiments/aes.html">04. AES Algorithm</a></li>
+            <li><a href="experiments/rsa.html">05. RSA Cryptography</a></li>
+            <li><a href="experiments/diffie-hellman.html">06. Diffie-Hellman Exchange</a></li>
+            <li><a href="experiments/sha1.html">07. SHA-1 Message Digest</a></li>
+            <li><a href="experiments/md5.html">08. MD5 Message Digest</a></li>
+            <li><a href="experiments/digital-signature.html">09. Digital Signatures (DSS)</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: References & Standards -->
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197 (AES)</a></li>
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/180-4/final" target="_blank" rel="noopener">NIST FIPS 180-4 (SHA)</a></li>
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/186-4/final" target="_blank" rel="noopener">NIST FIPS 186-4 (DSS)</a></li>
+            <li><a href="https://www.ietf.org/rfc/rfc1321.txt" target="_blank" rel="noopener">RFC 1321 (MD5)</a></li>
+            <li><a href="resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Educational Disclaimer Bar -->
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes. It does not replace professional, hardware-backed, or production cryptographic security implementations.
+        </div>
+        <div>
+          <span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/navigation.js"></script>
+  <script>
+    // Render 9 experiment cards dynamically on homepage
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('homeExperimentsGrid');
+      if (grid && window.ExperimentsDirectory) {
+        let html = '';
+        window.ExperimentsDirectory.forEach(exp => {
+          html += `
+            <div class="card card-interactive d-flex flex-column" style="height: 100%;">
+              <div class="card-header" style="margin-bottom: var(--space-3); padding-bottom: var(--space-2);">
+                <span class="badge badge-primary">${exp.number}</span>
+                <span class="badge badge-neutral" style="font-size: 0.7rem;">${exp.category}</span>
+              </div>
+              <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-main);">${exp.title}</h3>
+              <p style="font-size: 0.875rem; color: var(--text-muted); flex-grow: 1; margin-bottom: var(--space-4);">
+                ${exp.description}
+              </p>
+              <div style="margin-bottom: var(--space-4); display: flex; gap: 4px; flex-wrap: wrap;">
+                ${exp.algorithms.slice(0, 3).map(a => `<span class="badge badge-neutral" style="font-size: 0.7rem;">${a}</span>`).join('')}
+              </div>
+              <a href="experiments/${exp.slug}" class="btn btn-primary btn-sm" style="width: 100%;">
+                Open Experiment →
+              </a>
+            </div>
+          `;
+        });
+        grid.innerHTML = html;
+      }
+    });
+  </script>
+</body>
+</html>

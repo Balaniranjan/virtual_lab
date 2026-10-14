@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 01: Classical Cipher Techniques - Caesar, Playfair, and Hill ciphers interactive simulation, theory, pretest, demo, practice, and posttest.">
+  <title>Experiment 01: Classical Cipher Techniques - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">01. Classical Cipher Techniques</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Title Banner -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 01</span>
+          <span class="experiment-category-badge">Classical Cryptography</span>
+        </div>
+        <h1 class="experiment-title">Classical Cipher Techniques: Caesar, Playfair, and Hill Ciphers</h1>
+        <p class="experiment-desc">
+          Investigate historical substitution mechanisms: monoalphabetic shifting (Caesar), polygraphic 5x5 keyword matrix transformations (Playfair), and modular linear algebra over Z_26 (Hill cipher).
+        </p>
+      </div>
+
+      <!-- Legacy Notice Alert -->
+      <div class="legacy-warning-alert">
+        <span class="legacy-warning-badge">Educational Legacy Primitive</span>
+        <div>
+          <strong>Cryptographic Notice:</strong> Caesar, Playfair, and Hill ciphers are strictly historical teaching demonstrations. They are trivial to break via frequency analysis, known-plaintext linear attacks, and brute force, and must never be used for real-world confidential data.
+        </div>
+      </div>
+
+      <!-- 8-Tab Educational Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To understand, implement, and analyze classical substitution cipher techniques by exploring the mathematical principles, algorithm mechanics, and cryptanalytic vulnerabilities of the Caesar Cipher, Playfair Cipher, and Hill Cipher.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Perform character-by-character modular shifts modulo 26 using the Caesar cipher.</li>
+            <li>Construct a 5x5 keyword matrix and execute digraph substitution rules under the Playfair cipher with proper padding conventions.</li>
+            <li>Apply modular matrix multiplication, determinant calculation, and matrix inversion modulo 26 to encrypt and decrypt polygraphic blocks in the Hill cipher.</li>
+            <li>Examine how frequency analysis breaks monoalphabetic ciphers and understand the mathematical conditions required for Hill key invertibility.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Foundations</h2>
+
+          <h3 class="mt-6 mb-3">1. Caesar Cipher (Shift Substitution)</h3>
+          <p>
+            The Caesar cipher is one of the earliest known monoalphabetic substitution ciphers, historically used by Julius Caesar. Each letter in the plaintext is shifted by a fixed integer key <code>k</code> (where <code>0 &le; k &le; 25</code>) across the 26-letter Latin alphabet.
+          </p>
+          <div class="visualizer-container">
+            <p><strong>Mathematical Formulation:</strong></p>
+            <p>Assign numerical values to letters: <code>A = 0, B = 1, C = 2, ... Z = 25</code>.</p>
+            <p><strong>Encryption:</strong> <code>C = (P + k) mod 26</code></p>
+            <p><strong>Decryption:</strong> <code>P = (C - k + 26) mod 26</code></p>
+          </div>
+          <p class="mt-3">
+            <strong>Security Vulnerability:</strong> With only 26 possible keys (key space size 26), an attacker can easily execute an exhaustive brute-force search. Furthermore, because each letter maps to exactly one ciphertext letter, standard English letter frequencies (e.g. 'E', 'T', 'A', 'O') are preserved directly in the ciphertext.
+          </p>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. Playfair Cipher (Digraphic Substitution)</h3>
+          <p>
+            Invented in 1854 by Charles Wheatstone and promoted by Lord Playfair, this was the first practical digraphic substitution cipher. Instead of individual characters, pairs of letters (digraphs) are transformed using a 5x5 key matrix.
+          </p>
+          <h4>Matrix Construction:</h4>
+          <ul>
+            <li>A 5x5 grid (25 cells) is filled with a keyword (excluding duplicate letters), followed by remaining alphabet letters in alphabetical order.</li>
+            <li><strong>I/J Convention:</strong> Since the English alphabet has 26 letters and the grid has 25 cells, 'I' and 'J' share a single cell.</li>
+          </ul>
+          <h4>Plaintext Digraph Preparation:</h4>
+          <ul>
+            <li>The plaintext is divided into pairs of letters.</li>
+            <li>If a pair consists of identical letters (e.g. "EE"), an 'X' (or 'Q') is inserted between them.</li>
+            <li>If the final text has an odd length, a trailing 'X' (or 'Z') is appended.</li>
+          </ul>
+          <h4>Transformation Rules:</h4>
+          <ol>
+            <li><strong>Same Row:</strong> Replace each letter with the letter to its immediate right (wrap around to the first column).</li>
+            <li><strong>Same Column:</strong> Replace each letter with the letter immediately below it (wrap around to the top row).</li>
+            <li><strong>Rectangle:</strong> Replace each letter with the letter in the same row but in the column of the other letter.</li>
+          </ol>
+          <p class="form-hint">
+            <em>Decryption applies inverse rules: shift left for same row, shift up for same column, and rectangle column swap. Note that filler 'X' characters remain in decrypted text.</em>
+          </p>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>3. Hill Cipher (Polygraphic Linear Algebra)</h3>
+          <p>
+            Invented by mathematician Lester S. Hill in 1929, the Hill cipher uses linear algebra and modular arithmetic to encrypt blocks of <code>m</code> letters simultaneously.
+          </p>
+          <h4>Mathematical Formulation:</h4>
+          <p>
+            Plaintext characters are partitioned into vectors of length <code>m</code>: <code>P = [p_1, p_2, ..., p_m]^T</code>.
+          </p>
+          <p><strong>Encryption:</strong> <code>C = (K &times; P) mod 26</code></p>
+          <p><strong>Decryption:</strong> <code>P = (K^{-1} &times; C) mod 26</code></p>
+
+          <h4>Invertibility Condition modulo 26:</h4>
+          <p>
+            For the key matrix <code>K</code> to be invertible modulo 26, its determinant <code>det(K)</code> must be coprime to 26:
+            <br>
+            <code>gcd(det(K) mod 26, 26) = 1</code>
+          </p>
+          <p>
+            Since 26 factors into <code>2 &times; 13</code>, the determinant must not be divisible by 2 or 13.
+          </p>
+          <p>
+            <strong>2x2 Matrix Inverse Formula:</strong>
+            <br>
+            <code>K^{-1} = det(K)^{-1} &times; [ [d, -b], [-c, a] ] mod 26</code>
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>Select your desired cipher sub-module using the tabs: <strong>Caesar Cipher</strong>, <strong>Playfair Cipher</strong>, or <strong>Hill Cipher</strong>.</li>
+            <li>
+              <strong>For Caesar Cipher:</strong>
+              <ul>
+                <li>Enter a plaintext message in the input text area.</li>
+                <li>Adjust the shift slider or type a numeric key value between <code>0</code> and <code>25</code>.</li>
+                <li>Click <strong>Encrypt</strong> to observe the character transformation table and the shifted alphabet strip.</li>
+                <li>Copy the ciphertext into the input, enter the same shift key, and click <strong>Decrypt</strong> to verify recovery.</li>
+              </ul>
+            </li>
+            <li>
+              <strong>For Playfair Cipher:</strong>
+              <ul>
+                <li>Enter a keyword (e.g. <code>MONARCHY</code>) and observe how the 5x5 matrix is automatically populated.</li>
+                <li>Input plaintext (e.g. <code>INSTRUMENTS</code>).</li>
+                <li>Click <strong>Encrypt</strong> to observe digraph splitting, filler insertion, and rule applications (row, column, or rectangle).</li>
+                <li>Inspect highlighted coordinates on the interactive 5x5 matrix.</li>
+              </ul>
+            </li>
+            <li>
+              <strong>For Hill Cipher:</strong>
+              <ul>
+                <li>Select matrix dimension: <strong>2x2</strong> or <strong>3x3</strong>.</li>
+                <li>Enter numerical matrix values (e.g. <code>[[9, 4], [5, 7]]</code>).</li>
+                <li>Observe determinant calculation and invertibility validation against 26.</li>
+                <li>Click <strong>Encrypt</strong> or <strong>Decrypt</strong> to trace vector multiplication step-by-step.</li>
+              </ul>
+            </li>
+            <li>Proceed to the <strong>Posttest</strong> tab to assess your conceptual understanding.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="classicalPretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>Guided Demonstration Examples</h2>
+          <p>Review these canonical textbook examples to observe step-by-step transformations before practicing with custom parameters.</p>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-6); margin-top: var(--space-6);">
+
+            <!-- Caesar Demo -->
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600);">
+              <h4>Example 1: Caesar Cipher (k = 3 - Augustus Shift)</h4>
+              <p style="font-size: 0.9rem;"><strong>Plaintext:</strong> <code>MEET ME AFTER THE TOGA PARTY</code></p>
+              <p style="font-size: 0.9rem;"><strong>Shift Key:</strong> <code>k = 3</code></p>
+              <p style="font-size: 0.9rem;"><strong>Transformation:</strong> Each letter shifted by +3 mod 26: <code>M(12)->P(15), E(4)->H(7), T(19)->W(22)...</code></p>
+              <p style="font-size: 0.9rem; color: var(--primary-700);"><strong>Ciphertext:</strong> <code>PHHW PH DIWHU WKH WRJD SDUWB</code></p>
+            </div>
+
+            <!-- Playfair Demo -->
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border-left: 4px solid var(--cyan-600);">
+              <h4>Example 2: Playfair Cipher (Keyword: "MONARCHY")</h4>
+              <p style="font-size: 0.9rem;"><strong>Keyword:</strong> <code>MONARCHY</code> | <strong>Plaintext:</strong> <code>BALLOON</code></p>
+              <p style="font-size: 0.9rem;"><strong>Digraph Preparation:</strong> 'LL' split with 'X', padded trailing letter -> <code>BA LX LO ON</code></p>
+              <p style="font-size: 0.9rem;"><strong>Matrix 5x5:</strong></p>
+              <pre style="font-family: var(--font-mono); font-size: 0.85rem; background: #ffffff; padding: 8px; border-radius: 4px; width: fit-content; border: 1px solid var(--border-color);">
+M  O  N  A  R
+C  H  Y  B  D
+E  F  G  I  K
+L  P  Q  S  T
+U  V  W  X  Z</pre>
+              <ul style="font-size: 0.875rem; margin-top: 6px;">
+                <li><code>BA</code> (Row 1 Col 3, Row 0 Col 3) -> Same Column -> <code>IB</code></li>
+                <li><code>LX</code> (Row 3 Col 0, Row 4 Col 3) -> Rectangle Swap -> <code>SU</code></li>
+                <li><code>LO</code> (Row 3 Col 0, Row 0 Col 1) -> Rectangle Swap -> <code>PM</code></li>
+                <li><code>ON</code> (Row 0 Col 1, Row 0 Col 2) -> Same Row -> <code>NA</code></li>
+              </ul>
+              <p style="font-size: 0.9rem; color: var(--cyan-700);"><strong>Ciphertext:</strong> <code>IB SU PM NA</code></p>
+            </div>
+
+            <!-- Hill Demo -->
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border-left: 4px solid var(--success-main);">
+              <h4>Example 3: Hill Cipher 2x2 Matrix</h4>
+              <p style="font-size: 0.9rem;"><strong>Plaintext:</strong> <code>HELP</code> -> Digraphs <code>HE (7, 4)</code>, <code>LP (11, 15)</code></p>
+              <p style="font-size: 0.9rem;"><strong>Key Matrix:</strong> <code>K = [ [3, 3], [2, 5] ]</code></p>
+              <p style="font-size: 0.9rem;">
+                <strong>Determinant:</strong> <code>det = (3*5 - 3*2) = 15 - 6 = 9</code>.
+                <br>
+                <code>gcd(9, 26) = 1</code>. Modular inverse of 9 mod 26 = <strong>3</strong> (since 9 &times; 3 = 27 &equiv; 1 mod 26).
+              </p>
+              <p style="font-size: 0.9rem;">
+                <strong>Vector 1 (H, E):</strong>
+                <code>[3*7 + 3*4, 2*7 + 5*4] = [33, 34] &equiv; [7, 8] mod 26 -> (H, I)</code>
+              </p>
+              <p style="font-size: 0.9rem; color: #065f46;"><strong>Ciphertext:</strong> <code>HIAT</code></p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE SIMULATION)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+        <div class="sub-exp-wrapper">
+
+          <!-- Sub-experiment switcher -->
+          <div class="sub-exp-selector">
+            <button type="button" class="sub-exp-btn active" data-sub="caesar">Caesar Cipher</button>
+            <button type="button" class="sub-exp-btn" data-sub="playfair">Playfair Cipher</button>
+            <button type="button" class="sub-exp-btn" data-sub="hill">Hill Cipher</button>
+          </div>
+
+          <!-- SUB-EXP A: CAESAR CIPHER -->
+          <div class="sub-exp-panel active" id="sub-caesar">
+            <div class="exp-workspace-grid">
+
+              <!-- Left Controls -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Caesar Cipher Controls</h3>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="resetCaesar()">Reset</button>
+                </div>
+
+                <div id="caesarAlertContainer"></div>
+
+                <div class="form-group">
+                  <label class="form-label" for="caesarInputText">Input Text</label>
+                  <textarea id="caesarInputText" class="form-textarea form-mono" rows="4" placeholder="Enter plaintext to encrypt or ciphertext to decrypt...">HELLO WORLD</textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="caesarShiftRange">
+                    Shift Key (k): <span id="caesarShiftValueLabel" style="color: var(--primary-600); font-weight: 700;">3</span>
+                  </label>
+                  <div class="d-flex align-items-center gap-3">
+                    <input type="range" id="caesarShiftRange" min="0" max="25" value="3" style="flex: 1;" oninput="updateCaesarShift(this.value)">
+                    <input type="number" id="caesarShiftNumber" min="0" max="25" value="3" class="form-input" style="width: 75px;" oninput="updateCaesarShift(this.value)">
+                  </div>
+                  <span class="form-hint">Valid key range: 0 to 25 (modulo 26).</span>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                  <button type="button" class="btn btn-primary" onclick="runCaesarEncrypt()" style="flex: 1;">
+                    Encrypt
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="runCaesarDecrypt()" style="flex: 1;">
+                    Decrypt
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right Output & Visualizer -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Output & Visualizer</h3>
+                  <button type="button" class="copy-btn" onclick="MainApp.copyToClipboard('caesarOutputText')">
+                    Copy Output
+                  </button>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="caesarOutputText">Result Output</label>
+                  <textarea id="caesarOutputText" class="form-textarea form-mono" rows="3" readonly></textarea>
+                </div>
+
+                <!-- Shift Strip -->
+                <div class="visualizer-container">
+                  <div class="visualizer-title">Alphabet Shift Alignment</div>
+                  <div class="alphabet-strip-wrapper">
+                    <div class="alphabet-strip" id="caesarAlphabetStrip">
+                      <!-- Rendered by JS -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Transformation Table -->
+                <div class="visualizer-container mt-4">
+                  <div class="visualizer-title">Character Transformation Steps</div>
+                  <div style="max-height: 220px; overflow-y: auto;">
+                    <table class="char-step-table" id="caesarStepTable">
+                      <thead>
+                        <tr>
+                          <th>Idx</th>
+                          <th>Char</th>
+                          <th>Formula</th>
+                          <th>Result</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td colspan="4" class="text-center text-muted">Click Encrypt or Decrypt to view steps</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SUB-EXP B: PLAYFAIR CIPHER -->
+          <div class="sub-exp-panel" id="sub-playfair">
+            <div class="exp-workspace-grid">
+
+              <!-- Left Controls -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Playfair Cipher Controls</h3>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="resetPlayfair()">Reset</button>
+                </div>
+
+                <div id="playfairAlertContainer"></div>
+
+                <div class="form-group">
+                  <label class="form-label" for="playfairKeyword">Keyword</label>
+                  <input type="text" id="playfairKeyword" class="form-input form-mono" value="MONARCHY" oninput="updatePlayfairMatrixPreview()">
+                  <span class="form-hint">Letters only. Non-alphabetic characters ignored. 'I' and 'J' share a cell.</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="playfairInputText">Input Text</label>
+                  <textarea id="playfairInputText" class="form-textarea form-mono" rows="3" placeholder="Enter plaintext or ciphertext...">INSTRUMENTS</textarea>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                  <button type="button" class="btn btn-primary" onclick="runPlayfairEncrypt()" style="flex: 1;">
+                    Encrypt
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="runPlayfairDecrypt()" style="flex: 1;">
+                    Decrypt
+                  </button>
+                </div>
+
+                <div class="alert alert-info mt-4" style="font-size: 0.8rem; margin-bottom: 0;">
+                  <div class="alert-content">
+                    <strong>Convention Note:</strong> Repeated letters in a digraph are separated with 'X' (or 'Q'). Odd trailing letters are padded with 'X'. When decrypting, these filler letters remain in the recovered text.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Matrix & Steps -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">5x5 Key Matrix & Digraphs</h3>
+                  <button type="button" class="copy-btn" onclick="MainApp.copyToClipboard('playfairOutputText')">
+                    Copy Output
+                  </button>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="playfairOutputText">Result Output</label>
+                  <input type="text" id="playfairOutputText" class="form-input form-mono" readonly>
+                </div>
+
+                <!-- Matrix Display -->
+                <div class="visualizer-container">
+                  <div class="visualizer-title">5x5 Playfair Grid (I/J Combined)</div>
+                  <div style="text-align: center; margin: var(--space-2) 0;">
+                    <div class="cipher-matrix-grid matrix-5x5" id="playfairMatrixGrid">
+                      <!-- Rendered by JS -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Intermediate Digraphs List -->
+                <div class="visualizer-container mt-4">
+                  <div class="visualizer-title">Digraph Transformations</div>
+                  <div style="max-height: 200px; overflow-y: auto;">
+                    <table class="char-step-table" id="playfairStepsTable">
+                      <thead>
+                        <tr>
+                          <th>Pair</th>
+                          <th>Rule Applied</th>
+                          <th>Output</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td colspan="3" class="text-center text-muted">Awaiting execution...</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SUB-EXP C: HILL CIPHER -->
+          <div class="sub-exp-panel" id="sub-hill">
+            <div class="exp-workspace-grid">
+
+              <!-- Left Controls -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Hill Cipher Controls</h3>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-secondary btn-sm active" id="hillSize2Btn" onclick="setHillSize(2)">2x2</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="hillSize3Btn" onclick="setHillSize(3)">3x3</button>
+                  </div>
+                </div>
+
+                <div id="hillAlertContainer"></div>
+
+                <div class="form-group">
+                  <label class="form-label">Key Matrix Values (Z_26)</label>
+                  <div id="hillMatrixInputsContainer" style="margin-bottom: var(--space-2);">
+                    <!-- Dynamic Matrix Inputs -->
+                  </div>
+                  <div id="hillInvertibilityBanner" class="mt-2" style="font-size: 0.825rem;"></div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="hillInputText">Input Text (A-Z)</label>
+                  <textarea id="hillInputText" class="form-textarea form-mono" rows="3" placeholder="Enter plaintext (e.g. HELP or ACT)...">HELP</textarea>
+                  <span class="form-hint">Non-alphabetic characters are removed. Padded with 'X' if length is not a multiple of matrix size.</span>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                  <button type="button" class="btn btn-primary" onclick="runHillEncrypt()" style="flex: 1;">
+                    Encrypt
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="runHillDecrypt()" style="flex: 1;">
+                    Decrypt
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right Matrix & Math Steps -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Linear Algebra Transformations</h3>
+                  <button type="button" class="copy-btn" onclick="MainApp.copyToClipboard('hillOutputText')">
+                    Copy Output
+                  </button>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="hillOutputText">Result Output</label>
+                  <input type="text" id="hillOutputText" class="form-input form-mono" readonly>
+                </div>
+
+                <!-- Matrix State & Inverse -->
+                <div class="visualizer-container">
+                  <div class="visualizer-title">Modular Inverse Matrix (K^-1 mod 26)</div>
+                  <div id="hillInverseMatrixDisplay" style="font-family: var(--font-mono); font-size: 0.85rem;">
+                    <!-- Rendered by JS -->
+                  </div>
+                </div>
+
+                <!-- Vector Steps -->
+                <div class="visualizer-container mt-4">
+                  <div class="visualizer-title">Vector Multiplications mod 26</div>
+                  <div id="hillVectorStepsList" style="max-height: 220px; overflow-y: auto; font-family: var(--font-mono); font-size: 0.8rem;">
+                    <p class="text-muted text-center" style="margin: var(--space-4) 0;">Click Encrypt or Decrypt to trace vector math</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="classicalPosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>William Stallings.</strong> <em>Cryptography and Network Security: Principles and Practice</em> (8th Edition), Chapter 2: Classical Encryption Techniques. Pearson, 2020.
+            </li>
+            <li>
+              <strong>Alfred J. Menezes, Paul C. van Oorschot, and Scott A. Vanstone.</strong> <em>Handbook of Applied Cryptography</em>, Chapter 7: Block Ciphers & Classical Substitution. CRC Press, 1996.
+            </li>
+            <li>
+              <strong>Lester S. Hill.</strong> "Cryptography in an Algebraic Alphabet." <em>The American Mathematical Monthly</em>, Vol. 36, No. 6 (1929), pp. 306–312.
+            </li>
+            <li>
+              <strong>David Kahn.</strong> <em>The Codebreakers: The Comprehensive History of Secret Communication from Ancient Times to the Internet</em>. Scribner, 1996.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Prev / Next Experiment Navigation -->
+      <div class="exp-pagination-nav">
+        <span class="btn btn-secondary btn-sm" style="opacity: 0.5; pointer-events: none;">← Previous Experiment</span>
+        <a href="transposition.html" class="exp-nav-btn">
+          Next: 02. Transposition Techniques →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/caesar.js"></script>
+  <script src="../js/crypto/playfair.js"></script>
+  <script src="../js/crypto/hill.js"></script>
+
+  <script>
+    // ==========================================
+    // 1. CAESAR CIPHER LOGIC
+    // ==========================================
+    function updateCaesarShift(val) {
+      val = parseInt(val, 10) || 0;
+      val = Math.max(0, Math.min(25, val));
+      document.getElementById('caesarShiftRange').value = val;
+      document.getElementById('caesarShiftNumber').value = val;
+      document.getElementById('caesarShiftValueLabel').textContent = val;
+      renderCaesarAlphabetStrip(val);
+    }
+
+    function renderCaesarAlphabetStrip(shift) {
+      const container = document.getElementById('caesarAlphabetStrip');
+      if (!container) return;
+      const mapping = CaesarCipher.getAlphabetMapping(shift);
+
+      let rowPlain = '<div class="alphabet-strip-row"><div class="strip-label">Plain [P]</div>';
+      let rowCipher = '<div class="alphabet-strip-row"><div class="strip-label">Shift [C]</div>';
+      let rowIdx = '<div class="alphabet-strip-row"><div class="strip-label">Index</div>';
+
+      mapping.forEach(m => {
+        rowPlain += `<div class="strip-cell">${m.plain}</div>`;
+        rowCipher += `<div class="strip-cell highlight">${m.cipher}</div>`;
+        rowIdx += `<div class="strip-cell" style="font-size:0.65rem; color:#64748b;">${m.index}</div>`;
+      });
+
+      rowPlain += '</div>';
+      rowCipher += '</div>';
+      rowIdx += '</div>';
+
+      container.innerHTML = rowPlain + rowCipher + rowIdx;
+    }
+
+    function runCaesarEncrypt() {
+      Validation.clearError('caesarAlertContainer');
+      const text = document.getElementById('caesarInputText').value;
+      const shift = document.getElementById('caesarShiftNumber').value;
+
+      if (!text.trim()) {
+        Validation.showError('caesarAlertContainer', 'Please enter a message to encrypt.');
+        return;
+      }
+
+      const { result, steps } = CaesarCipher.encrypt(text, shift);
+      document.getElementById('caesarOutputText').value = result;
+      renderCaesarTable(steps);
+      MainApp.showToast('Caesar encryption completed.');
+    }
+
+    function runCaesarDecrypt() {
+      Validation.clearError('caesarAlertContainer');
+      const text = document.getElementById('caesarInputText').value;
+      const shift = document.getElementById('caesarShiftNumber').value;
+
+      if (!text.trim()) {
+        Validation.showError('caesarAlertContainer', 'Please enter ciphertext to decrypt.');
+        return;
+      }
+
+      const { result, steps } = CaesarCipher.decrypt(text, shift);
+      document.getElementById('caesarOutputText').value = result;
+      renderCaesarTable(steps);
+      MainApp.showToast('Caesar decryption completed.');
+    }
+
+    function renderCaesarTable(steps) {
+      const tbody = document.querySelector('#caesarStepTable tbody');
+      if (!tbody) return;
+      let html = '';
+      steps.slice(0, 50).forEach(s => {
+        html += `
+          <tr>
+            <td>${s.index}</td>
+            <td><strong>${s.char}</strong></td>
+            <td><code>${s.formula}</code></td>
+            <td><strong style="color:var(--primary-700);">${s.outChar}</strong></td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function resetCaesar() {
+      document.getElementById('caesarInputText').value = 'HELLO WORLD';
+      document.getElementById('caesarOutputText').value = '';
+      updateCaesarShift(3);
+      Validation.clearError('caesarAlertContainer');
+      const tbody = document.querySelector('#caesarStepTable tbody');
+      if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Click Encrypt or Decrypt to view steps</td></tr>';
+    }
+
+    // ==========================================
+    // 2. PLAYFAIR CIPHER LOGIC
+    // ==========================================
+    function updatePlayfairMatrixPreview() {
+      const kw = document.getElementById('playfairKeyword').value;
+      const { matrix } = PlayfairCipher.generateMatrix(kw);
+      const grid = document.getElementById('playfairMatrixGrid');
+      if (!grid) return;
+
+      let html = '';
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+          const char = matrix[r][c];
+          html += `<div class="matrix-cell" id="pf_cell_${r}_${c}">${char}</div>`;
+        }
+      }
+      grid.innerHTML = html;
+    }
+
+    function runPlayfairEncrypt() {
+      Validation.clearError('playfairAlertContainer');
+      const text = document.getElementById('playfairInputText').value;
+      const kw = document.getElementById('playfairKeyword').value;
+
+      if (!text.replace(/[^A-Za-z]/g, '')) {
+        Validation.showError('playfairAlertContainer', 'Plaintext must contain at least one alphabetic character.');
+        return;
+      }
+
+      const { result, steps, matrix } = PlayfairCipher.encrypt(text, kw);
+      document.getElementById('playfairOutputText').value = result;
+      renderPlayfairSteps(steps);
+      MainApp.showToast('Playfair encryption completed.');
+    }
+
+    function runPlayfairDecrypt() {
+      Validation.clearError('playfairAlertContainer');
+      const text = document.getElementById('playfairInputText').value;
+      const kw = document.getElementById('playfairKeyword').value;
+
+      if (!text.replace(/[^A-Za-z]/g, '')) {
+        Validation.showError('playfairAlertContainer', 'Ciphertext must contain at least one alphabetic character.');
+        return;
+      }
+
+      const { result, steps } = PlayfairCipher.decrypt(text, kw);
+      document.getElementById('playfairOutputText').value = result;
+      renderPlayfairSteps(steps);
+      MainApp.showToast('Playfair decryption completed.');
+    }
+
+    function renderPlayfairSteps(steps) {
+      const tbody = document.querySelector('#playfairStepsTable tbody');
+      if (!tbody) return;
+      let html = '';
+      steps.forEach(s => {
+        html += `
+          <tr onmouseenter="highlightPlayfairPair(${s.p1.row}, ${s.p1.col}, ${s.p2.row}, ${s.p2.col})" onmouseleave="clearPlayfairHighlights()">
+            <td><code>${s.inPair.join('')}</code></td>
+            <td>${s.rule}</td>
+            <td><strong style="color:var(--cyan-700);">${s.outDigraph}</strong></td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function highlightPlayfairPair(r1, c1, r2, c2) {
+      clearPlayfairHighlights();
+      const cell1 = document.getElementById(`pf_cell_${r1}_${c1}`);
+      const cell2 = document.getElementById(`pf_cell_${r2}_${c2}`);
+      if (cell1) cell1.classList.add('cell-highlight-first');
+      if (cell2) cell2.classList.add('cell-highlight-second');
+    }
+
+    function clearPlayfairHighlights() {
+      document.querySelectorAll('#playfairMatrixGrid .matrix-cell').forEach(c => {
+        c.classList.remove('cell-highlight-first', 'cell-highlight-second');
+      });
+    }
+
+    function resetPlayfair() {
+      document.getElementById('playfairKeyword').value = 'MONARCHY';
+      document.getElementById('playfairInputText').value = 'INSTRUMENTS';
+      document.getElementById('playfairOutputText').value = '';
+      Validation.clearError('playfairAlertContainer');
+      updatePlayfairMatrixPreview();
+      const tbody = document.querySelector('#playfairStepsTable tbody');
+      if (tbody) tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Awaiting execution...</td></tr>';
+    }
+
+    // ==========================================
+    // 3. HILL CIPHER LOGIC
+    // ==========================================
+    let currentHillSize = 2;
+    const default2x2 = [[9, 4], [5, 7]];
+    const default3x3 = [[6, 24, 1], [13, 16, 10], [20, 17, 15]];
+
+    function setHillSize(size) {
+      currentHillSize = size;
+      document.getElementById('hillSize2Btn').classList.toggle('active', size === 2);
+      document.getElementById('hillSize3Btn').classList.toggle('active', size === 3);
+      renderHillMatrixInputs();
+      checkHillInvertibility();
+    }
+
+    function renderHillMatrixInputs() {
+      const container = document.getElementById('hillMatrixInputsContainer');
+      if (!container) return;
+      const size = currentHillSize;
+      const defaults = size === 2 ? default2x2 : default3x3;
+
+      let html = `<div style="display:inline-grid; grid-template-columns: repeat(${size}, 54px); gap:6px;">`;
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const val = defaults[r] ? defaults[r][c] : 1;
+          html += `<input type="number" id="hill_k_${r}_${c}" class="form-input form-mono" value="${val}" style="padding:4px; text-align:center;" oninput="checkHillInvertibility()">`;
+        }
+      }
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function getHillMatrix() {
+      const size = currentHillSize;
+      const m = [];
+      for (let r = 0; r < size; r++) {
+        m[r] = [];
+        for (let c = 0; c < size; c++) {
+          const input = document.getElementById(`hill_k_${r}_${c}`);
+          m[r][c] = parseInt(input.value, 10) || 0;
+        }
+      }
+      return m;
+    }
+
+    function checkHillInvertibility() {
+      const matrix = getHillMatrix();
+      const banner = document.getElementById('hillInvertibilityBanner');
+      const invDisplay = document.getElementById('hillInverseMatrixDisplay');
+      if (!banner) return;
+
+      const invResult = HillCipher.invertMatrix(matrix);
+
+      if (invResult.success) {
+        banner.innerHTML = `<span style="color:#059669; font-weight:600;">✓ Invertible modulo 26: det = ${invResult.modDet}, (det)^-1 mod 26 = ${invResult.invDet}</span>`;
+        if (invDisplay) {
+          let mStr = invResult.invMatrix.map(row => `[ ${row.join(', ')} ]`).join('\n');
+          invDisplay.innerHTML = `<pre style="margin:0; padding:4px;">${mStr}</pre>`;
+        }
+      } else {
+        banner.innerHTML = `<span style="color:#dc2626; font-weight:600;">✕ Non-invertible: det = ${invResult.modDet} (gcd with 26 != 1). Decryption will fail!</span>`;
+        if (invDisplay) {
+          invDisplay.innerHTML = `<span class="text-danger" style="font-size:0.8rem;">Inverse matrix does not exist in Z_26</span>`;
+        }
+      }
+    }
+
+    function runHillEncrypt() {
+      Validation.clearError('hillAlertContainer');
+      const text = document.getElementById('hillInputText').value;
+      const matrix = getHillMatrix();
+
+      if (!text.replace(/[^A-Za-z]/g, '')) {
+        Validation.showError('hillAlertContainer', 'Please provide alphabetic text.');
+        return;
+      }
+
+      const res = HillCipher.encrypt(text, matrix);
+      document.getElementById('hillOutputText').value = res.result;
+      renderHillSteps(res.steps);
+      MainApp.showToast('Hill encryption completed.');
+    }
+
+    function runHillDecrypt() {
+      Validation.clearError('hillAlertContainer');
+      const text = document.getElementById('hillInputText').value;
+      const matrix = getHillMatrix();
+
+      const res = HillCipher.decrypt(text, matrix);
+      if (res.error) {
+        Validation.showError('hillAlertContainer', res.error);
+        return;
+      }
+
+      document.getElementById('hillOutputText').value = res.result;
+      renderHillSteps(res.steps);
+      MainApp.showToast('Hill decryption completed.');
+    }
+
+    function renderHillSteps(steps) {
+      const container = document.getElementById('hillVectorStepsList');
+      if (!container) return;
+      let html = '';
+      steps.forEach(s => {
+        html += `
+          <div style="background:#ffffff; border:1px solid var(--border-color); border-radius:4px; padding:6px; margin-bottom:6px;">
+            <div style="color:var(--primary-700); font-weight:700;">Block ${s.blockIndex}: "${s.inChars}" -> "${s.outChars}"</div>
+            ${s.calcs.map(c => `<div>Row ${c.row}: ${c.formula} -> <strong>${c.char}</strong></div>`).join('')}
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Quizzes
+      QuizEngine.renderQuiz('classical-ciphers', 'pretest', 'classicalPretestContainer');
+      QuizEngine.renderQuiz('classical-ciphers', 'posttest', 'classicalPosttestContainer');
+
+      // 2. Caesar Initial Strip
+      updateCaesarShift(3);
+
+      // 3. Playfair Initial Matrix
+      updatePlayfairMatrixPreview();
+
+      // 4. Hill Initial Grid
+      renderHillMatrixInputs();
+      checkHillInvertibility();
+    });
+  </script>
+</body>
+</html>

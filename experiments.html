@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="List of Interactive Experiments - Principles of Cryptography Virtual Lab. Explore classical ciphers, DES, AES, RSA, Diffie-Hellman, SHA-1, MD5, and Digital Signatures.">
+  <title>List of Experiments - Principles of Cryptography Virtual Lab</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/experiments.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="introduction.html" class="nav-link">Introduction</a>
+        <a href="objectives.html" class="nav-link">Objectives</a>
+        <a href="experiments.html" class="nav-link active">Experiments</a>
+        <a href="resources.html" class="nav-link">Resources</a>
+        <a href="feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">List of Experiments</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Page Intro Header -->
+      <div class="card mb-6" style="padding: var(--space-6) var(--space-8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+          <div>
+            <h1>List of Laboratory Experiments</h1>
+            <p class="academic-lead" style="margin-bottom: 0;">
+              Nine interactive virtual experiments covering historical substitution/transposition, modern symmetric ciphers, public-key mathematics, and integrity standards.
+            </p>
+          </div>
+          <div id="overallProgressBadge" class="badge badge-neutral" style="padding: 0.5rem 0.85rem; font-size: 0.85rem;">
+            Loading progress...
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Search & Category Filtering Bar -->
+      <div class="card mb-6" style="padding: var(--space-4) var(--space-6);">
+        <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: center; justify-content: space-between;">
+
+          <!-- Category Pills -->
+          <div class="d-flex gap-2 flex-wrap" id="categoryFilterGroup">
+            <button type="button" class="btn btn-primary btn-sm category-filter-btn" data-category="ALL">All Categories (9)</button>
+            <button type="button" class="btn btn-secondary btn-sm category-filter-btn" data-category="Classical Cryptography">Classical (2)</button>
+            <button type="button" class="btn btn-secondary btn-sm category-filter-btn" data-category="Symmetric Encryption">Symmetric (2)</button>
+            <button type="button" class="btn btn-secondary btn-sm category-filter-btn" data-category="Asymmetric Cryptography">Asymmetric (2)</button>
+            <button type="button" class="btn btn-secondary btn-sm category-filter-btn" data-category="Hashing & Signatures">Hashing & Signatures (3)</button>
+          </div>
+
+          <!-- Quick Filter Input -->
+          <div style="min-width: 260px; flex: 1; max-width: 360px;">
+            <input type="text" id="dirFilterInput" class="form-input" placeholder="Filter experiments by title or algorithm..." style="padding: 0.45rem 0.75rem; font-size: 0.875rem;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Experiments Grid -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6);" id="experimentsListGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Empty State Container -->
+      <div id="emptyResultsState" class="card" style="display: none; text-align: center; padding: var(--space-12); margin-top: var(--space-6);">
+        <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="var(--text-light)" style="margin: 0 auto var(--space-3);">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h3>No experiments matched your search</h3>
+        <p class="text-muted">Try clearing your filters or search keywords.</p>
+        <button type="button" class="btn btn-secondary btn-sm mt-3" onclick="resetFilters()">Reset All Filters</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="introduction.html">Introduction</a></li>
+            <li><a href="objectives.html">Objectives</a></li>
+            <li><a href="experiments.html">List of Experiments</a></li>
+            <li><a href="resources.html">Learning Resources</a></li>
+            <li><a href="feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="experiments/classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="experiments/transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="experiments/des.html">03. DES Algorithm</a></li>
+            <li><a href="experiments/aes.html">04. AES Algorithm</a></li>
+            <li><a href="experiments/rsa.html">05. RSA Cryptography</a></li>
+            <li><a href="experiments/diffie-hellman.html">06. Diffie-Hellman Exchange</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197</a></li>
+            <li><a href="resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/assessments.js"></script>
+  <script>
+    let activeCategory = 'ALL';
+    let searchQuery = '';
+
+    function getStorageKey(slug) {
+      return slug.replace('.html', '');
+    }
+
+    function renderExperimentCards() {
+      const grid = document.getElementById('experimentsListGrid');
+      const emptyState = document.getElementById('emptyResultsState');
+      if (!grid || !window.ExperimentsDirectory) return;
+
+      const progress = window.QuizEngine ? QuizEngine.getProgress() : {};
+
+      const filtered = window.ExperimentsDirectory.filter(exp => {
+        // Category check
+        if (activeCategory !== 'ALL' && exp.category !== activeCategory) {
+          return false;
+        }
+        // Search query check
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const matchTitle = exp.title.toLowerCase().includes(q);
+          const matchDesc = exp.description.toLowerCase().includes(q);
+          const matchAlgs = exp.algorithms.some(a => a.toLowerCase().includes(q));
+          const matchKeywords = exp.keywords.some(k => k.toLowerCase().includes(q));
+          if (!matchTitle && !matchDesc && !matchAlgs && !matchKeywords) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      grid.style.display = 'grid';
+      emptyState.style.display = 'none';
+
+      let html = '';
+      filtered.forEach(exp => {
+        const key = getStorageKey(exp.slug);
+        const expProg = progress[key] || {};
+        const pretestDone = !!expProg.pretest;
+        const posttestDone = !!expProg.posttest;
+
+        let statusBadge = '<span class="badge badge-neutral" style="font-size: 0.7rem;">Not Started</span>';
+        if (pretestDone && posttestDone) {
+          statusBadge = `<span class="badge badge-success" style="font-size: 0.7rem;">Completed (${expProg.posttest.score}/5)</span>`;
+        } else if (pretestDone) {
+          statusBadge = '<span class="badge badge-warning" style="font-size: 0.7rem;">In Progress</span>';
+        }
+
+        html += `
+          <div class="card card-interactive d-flex flex-column" style="height: 100%;">
+            <div class="card-header" style="margin-bottom: var(--space-3); padding-bottom: var(--space-2);">
+              <span class="badge badge-primary">${exp.number}</span>
+              ${statusBadge}
+            </div>
+            <h3 style="font-size: 1.2rem; margin-bottom: var(--space-2); color: var(--text-main);">${exp.title}</h3>
+            <span class="badge badge-neutral mb-3" style="width: fit-content; font-size: 0.725rem;">${exp.category}</span>
+            <p style="font-size: 0.875rem; color: var(--text-muted); flex-grow: 1; margin-bottom: var(--space-4);">
+              ${exp.description}
+            </p>
+            <div style="margin-bottom: var(--space-4); display: flex; gap: 4px; flex-wrap: wrap;">
+              ${exp.algorithms.map(a => `<span class="badge badge-neutral" style="font-size: 0.7rem;">${a}</span>`).join('')}
+            </div>
+            <a href="experiments/${exp.slug}" class="btn btn-primary btn-sm" style="width: 100%;">
+              Open Experiment →
+            </a>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html;
+
+      // Update overall progress badge
+      const totalExps = window.ExperimentsDirectory.length;
+      let completedCount = 0;
+      window.ExperimentsDirectory.forEach(exp => {
+        const k = getStorageKey(exp.slug);
+        if (progress[k] && progress[k].posttest) completedCount++;
+      });
+      const badgeEl = document.getElementById('overallProgressBadge');
+      if (badgeEl) {
+        badgeEl.textContent = `${completedCount} of ${totalExps} Experiments Completed`;
+        if (completedCount === totalExps) {
+          badgeEl.className = 'badge badge-success';
+        } else if (completedCount > 0) {
+          badgeEl.className = 'badge badge-primary';
+        }
+      }
+    }
+
+    function resetFilters() {
+      activeCategory = 'ALL';
+      searchQuery = '';
+      const input = document.getElementById('dirFilterInput');
+      if (input) input.value = '';
+      document.querySelectorAll('.category-filter-btn').forEach(btn => {
+        if (btn.getAttribute('data-category') === 'ALL') {
+          btn.className = 'btn btn-primary btn-sm category-filter-btn';
+        } else {
+          btn.className = 'btn btn-secondary btn-sm category-filter-btn';
+        }
+      });
+      renderExperimentCards();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderExperimentCards();
+
+      // Category buttons
+      document.querySelectorAll('.category-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.category-filter-btn').forEach(b => {
+            b.className = 'btn btn-secondary btn-sm category-filter-btn';
+          });
+          btn.className = 'btn btn-primary btn-sm category-filter-btn';
+          activeCategory = btn.getAttribute('data-category');
+          renderExperimentCards();
+        });
+      });
+
+      // Search input
+      const input = document.getElementById('dirFilterInput');
+      if (input) {
+        input.addEventListener('input', (e) => {
+          searchQuery = e.target.value.trim();
+          renderExperimentCards();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

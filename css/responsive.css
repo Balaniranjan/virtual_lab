@@ -1,0 +1,170 @@
+/* ==========================================================================
+   Principles of Cryptography Virtual Lab - Responsive Breakpoints & Accessibility
+   ========================================================================== */
+
+/* Tablet & Smaller Desktops (< 1024px) */
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  .exp-workspace-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  .dh-actors-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .dh-exchange-channel {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* Tablets (< 768px) */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 64px;
+  }
+
+  h1 { font-size: 1.85rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+
+  /* Mobile Navigation Drawer */
+  .mobile-nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-surface);
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-6);
+    gap: var(--space-2);
+    border-top: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+    z-index: 99;
+    overflow-y: auto;
+  }
+
+  .main-nav.open {
+    transform: translateX(0);
+  }
+
+  .nav-link {
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+    border-bottom: 1px solid var(--bg-surface-alt);
+  }
+
+  .nav-link.active::after {
+    display: none;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+
+  .gov-top-banner {
+    display: none; /* Keep mobile view clean */
+  }
+
+  .experiment-header {
+    padding: var(--space-4);
+  }
+
+  .experiment-title {
+    font-size: 1.45rem;
+  }
+
+  .exp-tab-btn {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.875rem;
+  }
+
+  .avalanche-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  .footer-disclaimer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .exp-pagination-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .exp-nav-btn {
+    justify-content: center;
+  }
+}
+
+/* Mobile Phones (< 480px) */
+@media (max-width: 480px) {
+  .sub-exp-btn {
+    min-width: 100%;
+  }
+
+  .matrix-5x5 {
+    grid-template-columns: repeat(5, 34px);
+    grid-template-rows: repeat(5, 34px);
+  }
+
+  .matrix-cell {
+    font-size: 0.9rem;
+  }
+
+  .card, .academic-section, .exp-panel {
+    padding: var(--space-4);
+  }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print Stylesheet */
+@media print {
+  .site-header, .gov-top-banner, .site-footer, .exp-pagination-nav, .experiment-tabs-nav, .btn, .search-trigger-btn {
+    display: none !important;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  .academic-section, .card, .exp-panel {
+    border: 1px solid #cccccc;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+}

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 08: MD5 Message Digest - RFC 1321 128-bit hash algorithm, 64-step compression rounds, avalanche effect, and historical collision vulnerabilities.">
+  <title>Experiment 08: MD5 Message Digest - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">08. MD5 Message Digest</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Header -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 08</span>
+          <span class="experiment-category-badge">Hashing & Integrity</span>
+        </div>
+        <h1 class="experiment-title">MD5 Message Digest Algorithm (RFC 1321): Compression & Collision Analysis</h1>
+        <p class="experiment-desc">
+          Study the 128-bit MD5 message digest function across its four 16-step rounds, evaluate avalanche sensitivity, and explore how collision vulnerabilities broke its integrity guarantees for cybersecurity.
+        </p>
+      </div>
+
+      <!-- Insecurity Warning -->
+      <div class="legacy-warning-alert">
+        <span class="legacy-warning-badge">Cryptographically Broken</span>
+        <div>
+          <strong>Vulnerability Alert:</strong> MD5 has suffered catastrophic collision attacks since 2004 (Wang et al.) and was weaponized in 2012 by the Flame malware to forge digital certificates. MD5 is strictly prohibited for security-sensitive applications, digital certificates, and password storage. Modern Web Crypto intentionally does not support MD5.
+        </div>
+      </div>
+
+      <!-- 8-Tab Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To calculate, analyze, and test message digests using the RFC 1321 MD5 algorithm, evaluating its 64-step round operations and little-endian word architecture, while quantifying why collision vulnerabilities render MD5 insecure for modern cryptographic verification.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Understand the 128-bit digest output and 512-bit block compression of RFC 1321.</li>
+            <li>Analyze the four auxiliary non-linear functions F, G, H, and I across 64 compression steps.</li>
+            <li>Recognize that native Web Crypto deliberately excludes MD5 due to security deprecation.</li>
+            <li>Quantify the Avalanche Effect and understand the impact of chosen-prefix collision attacks on digital signatures.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Principles of MD5</h2>
+
+          <h3 class="mt-6 mb-3">1. Algorithmic Overview (RFC 1321)</h3>
+          <p>
+            Designed by Professor Ronald Rivest in 1991 to replace MD4, MD5 processes messages in <strong>512-bit blocks (sixteen 32-bit words)</strong>, using little-endian byte ordering, producing a <strong>128-bit digest</strong>.
+          </p>
+          <div class="visualizer-container">
+            <p><strong>Four 32-bit State Registers:</strong></p>
+            <p><code>A = 0x67452301, B = 0xEFCDAB89, C = 0x98BADCFE, D = 0x10325476</code></p>
+            <p><strong>Four Non-linear Auxiliary Functions:</strong></p>
+            <ul>
+              <li>Round 1 (Steps 0-15): <code>F(X, Y, Z) = (X &and; Y) &or; (&not;X &and; Z)</code></li>
+              <li>Round 2 (Steps 16-31): <code>G(X, Y, Z) = (X &and; Z) &or; (Y &and; &not;Z)</code></li>
+              <li>Round 3 (Steps 32-47): <code>H(X, Y, Z) = X &oplus; Y &oplus; Z</code></li>
+              <li>Round 4 (Steps 48-63): <code>I(X, Y, Z) = Y &oplus; (X &or; &not;Z)</code></li>
+            </ul>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. Collision Attacks & The Death of MD5</h3>
+          <p>
+            In August 2004, Chinese cryptanalysts Xiaoyun Wang, Dengguo Feng, Xuejia Lai, and Hongbo Yu published the first practical collision attack on MD5. They demonstrated that two distinct 128-byte messages could produce the identical MD5 digest in under an hour on a standard desktop.
+          </p>
+          <p>
+            In 2008, security researchers used chosen-prefix collisions to construct a rogue Certification Authority (CA) certificate trusted by all major web browsers. In 2012, the Flame cyber weapon used a colliding certificate to sign malicious binaries impersonating Microsoft Windows Update. Consequently, MD5 is completely deprecated for cryptographic integrity.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>Enter any text message in the input text area.</li>
+            <li>Click <strong>Calculate MD5 Digest</strong>.</li>
+            <li>Inspect the resulting 32-character hexadecimal digest and confirm that its bit length is exactly 128 bits (16 bytes).</li>
+            <li>Use the <strong>Avalanche Comparison Tool</strong> to compare hashes of two inputs differing by just one letter.</li>
+            <li>Observe how the bit-level difference confirms the avalanche property, while understanding why collision resistance is broken.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="md5PretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>Standard Known-Answer Test Vectors (RFC 1321)</h2>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-4);">
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600);">
+              <strong>Vector 1: Empty String ("")</strong>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 4px;">
+                Digest: <code style="color:var(--primary-700);">d41d8cd98f00b204e9800998ecf8427e</code> (32 hex characters / 128 bits)
+              </div>
+            </div>
+
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid var(--cyan-600);">
+              <strong>Vector 2: "a"</strong>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 4px;">
+                Digest: <code style="color:var(--cyan-700);">0cc175b9c0f1b6a831c399e269772661</code>
+              </div>
+            </div>
+
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid var(--success-main);">
+              <strong>Vector 3: "message digest"</strong>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 4px;">
+                Digest: <code style="color:#065f46;">f96b697d7cb7938d525a2f31aaf161d0</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE WORKSPACE)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+
+        <!-- PART 1: MD5 Calculator -->
+        <div class="card mb-8">
+          <div class="card-header">
+            <h3 class="card-title">MD5 Message Digest Calculator</h3>
+            <span class="badge badge-neutral">RFC 1321 (Pure JS)</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="md5InputText">Message Input</label>
+            <textarea id="md5InputText" class="form-textarea form-mono" rows="3" placeholder="Enter text to calculate MD5 digest...">The quick brown fox jumps over the lazy dog</textarea>
+          </div>
+
+          <div class="d-flex gap-3 mb-6">
+            <button type="button" class="btn btn-primary" onclick="runMD5Calculate()">
+              Calculate Digest
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="clearMD5()">
+              Clear Input & Output
+            </button>
+          </div>
+
+          <div class="form-group">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label" for="md5OutputHex" style="margin:0;">MD5 Digest Output (Hexadecimal)</label>
+              <div class="d-flex gap-2">
+                <span class="badge badge-primary">128 Bits</span>
+                <span class="badge badge-neutral">16 Bytes</span>
+                <span class="badge badge-neutral">32 Hex Chars</span>
+              </div>
+            </div>
+            <div class="input-with-action">
+              <input type="text" id="md5OutputHex" class="form-input form-mono" readonly style="font-weight:700; color:var(--primary-700);">
+              <button type="button" class="copy-btn" onclick="MainApp.copyToClipboard('md5OutputHex')">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PART 2: Avalanche Comparison Tool -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">MD5 Avalanche Comparison & Sensitivity Tool</h3>
+            <span class="badge badge-neutral">Hamming Distance</span>
+          </div>
+
+          <div class="avalanche-grid">
+            <div class="avalanche-card">
+              <label class="form-label" for="md5AvalancheA">Input Message A</label>
+              <input type="text" id="md5AvalancheA" class="form-input form-mono" value="The quick brown fox jumps over the lazy dog">
+              <div style="font-family:var(--font-mono); font-size:0.775rem; margin-top:var(--space-2); word-break:break-all;">
+                MD5 A: <code id="md5DigestA" style="color:var(--primary-700); font-size:0.75rem;">--</code>
+              </div>
+            </div>
+
+            <div class="avalanche-card">
+              <label class="form-label" for="md5AvalancheB">Input Message B (Modified by 1 character)</label>
+              <input type="text" id="md5AvalancheB" class="form-input form-mono" value="The quick brown fox jumps over the lazy cog">
+              <div style="font-family:var(--font-mono); font-size:0.775rem; margin-top:var(--space-2); word-break:break-all;">
+                MD5 B: <code id="md5DigestB" style="color:var(--cyan-700); font-size:0.75rem;">--</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center mt-4">
+            <button type="button" class="btn btn-primary" onclick="runMD5AvalancheAnalysis()">
+              Analyze MD5 Avalanche Effect
+            </button>
+          </div>
+
+          <div id="md5AvalancheScoreBanner" class="avalanche-diff-score" style="display:none;"></div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="md5PosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>R. Rivest.</strong> <em>The MD5 Message-Digest Algorithm</em>, RFC 1321. Network Working Group, 1992.
+            </li>
+            <li>
+              <strong>X. Wang, D. Feng, X. Lai, and H. Yu.</strong> "Collisions for Hash Functions MD4, MD5, HAVAL-128 and RIPEMD." <em>Cryptology ePrint Archive</em>, Report 2004/199, 2004.
+            </li>
+            <li>
+              <strong>A. Sotirov et al.</strong> "MD5 considered harmful today: Creating a rogue CA certificate." <em>25th Chaos Communication Congress</em>, 2008.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Pagination Footer -->
+      <div class="exp-pagination-nav">
+        <a href="sha1.html" class="exp-nav-btn">
+          ← Previous: 07. SHA-1 Message Digest
+        </a>
+        <a href="digital-signature.html" class="exp-nav-btn">
+          Next: 09. Digital Signature Standard (DSS) →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+            <li><a href="sha1.html">07. SHA-1 Message Digest</a></li>
+            <li><a href="md5.html">08. MD5 Message Digest</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://www.ietf.org/rfc/rfc1321.txt" target="_blank" rel="noopener">RFC 1321 (MD5)</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/md5.js"></script>
+
+  <script>
+    function runMD5Calculate() {
+      const text = document.getElementById('md5InputText').value;
+      const res = MD5Helper.compute(text);
+      document.getElementById('md5OutputHex').value = res.hex;
+      MainApp.showToast('MD5 digest calculated.');
+    }
+
+    function clearMD5() {
+      document.getElementById('md5InputText').value = '';
+      document.getElementById('md5OutputHex').value = '';
+    }
+
+    function runMD5AvalancheAnalysis() {
+      const textA = document.getElementById('md5AvalancheA').value;
+      const textB = document.getElementById('md5AvalancheB').value;
+
+      const resA = MD5Helper.compute(textA);
+      const resB = MD5Helper.compute(textB);
+
+      document.getElementById('md5DigestA').textContent = resA.hex;
+      document.getElementById('md5DigestB').textContent = resB.hex;
+
+      const diff = MD5Helper.calculateAvalanche(resA.hex, resB.hex);
+      const banner = document.getElementById('md5AvalancheScoreBanner');
+      banner.style.display = 'block';
+      banner.innerHTML = `
+        <strong>MD5 Avalanche Effect:</strong>
+        ${diff.diffBits} out of ${diff.totalBits} bits flipped (<strong>${diff.percentage}% difference</strong>).
+      `;
+      MainApp.showToast(`MD5 Avalanche analyzed: ${diff.percentage}% bits changed.`);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      QuizEngine.renderQuiz('md5', 'pretest', 'md5PretestContainer');
+      QuizEngine.renderQuiz('md5', 'posttest', 'md5PosttestContainer');
+      runMD5Calculate();
+      runMD5AvalancheAnalysis();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Introduction to Cryptography - Fundamentals of confidentiality, integrity, symmetric & asymmetric encryption, hashes, and digital signatures.">
+  <title>Introduction - Principles of Cryptography Virtual Lab</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/experiments.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="introduction.html" class="nav-link active">Introduction</a>
+        <a href="objectives.html" class="nav-link">Objectives</a>
+        <a href="experiments.html" class="nav-link">Experiments</a>
+        <a href="resources.html" class="nav-link">Resources</a>
+        <a href="feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">Introduction</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container" style="max-width: 960px;">
+
+      <div class="academic-section">
+        <h1>Introduction to Cryptography</h1>
+        <p class="academic-lead">
+          Cryptography is the mathematical science of securing digital information against unauthorized interception, modification, and forgery in hostile communication environments.
+        </p>
+        <p>
+          Derived from the Greek words <em>kryptos</em> ("hidden") and <em>graphein</em> ("writing"), modern cryptography has expanded far beyond simple secret writing. It forms the core mathematical foundation for global e-commerce, cloud infrastructure, secure network protocols (TLS/HTTPS), blockchain systems, and identity management.
+        </p>
+      </div>
+
+      <!-- Core Security Objectives -->
+      <section class="card mb-8">
+        <h2 style="margin-bottom: var(--space-4);">The Four Fundamental Security Goals</h2>
+        <p>In academic information security, every cryptographic mechanism is designed to satisfy one or more of four fundamental security objectives:</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-4);">
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600);">
+            <h4 style="color: var(--primary-800); margin-bottom: 0.35rem;">1. Confidentiality</h4>
+            <p style="font-size: 0.875rem;">
+              Ensures that information is inaccessible to unauthorized entities. Achieved through symmetric (AES) and asymmetric (RSA) encryption algorithms.
+            </p>
+          </div>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid var(--cyan-600);">
+            <h4 style="color: var(--cyan-700); margin-bottom: 0.35rem;">2. Integrity</h4>
+            <p style="font-size: 0.875rem;">
+              Guarantees that data cannot be modified, corrupted, or tampered with in transit without detection. Achieved through cryptographic hash functions (SHA-256) and MACs.
+            </p>
+          </div>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid #10b981;">
+            <h4 style="color: #065f46; margin-bottom: 0.35rem;">3. Authentication</h4>
+            <p style="font-size: 0.875rem;">
+              Verifies the claimed identity of the transmitting party or origin of data. Achieved through digital signatures (DSS, ECDSA) and public-key certificates.
+            </p>
+          </div>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid #7c3aed;">
+            <h4 style="color: #5b21b6; margin-bottom: 0.35rem;">4. Non-Repudiation</h4>
+            <p style="font-size: 0.875rem;">
+              Prevents the creator of a message from falsely denying having sent it, providing irrefutable mathematical evidence to third parties.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Terminology Diagram -->
+      <section class="card mb-8">
+        <h2 style="margin-bottom: var(--space-4);">Core Terminology & Transformation Pipeline</h2>
+        <div style="overflow-x: auto; margin-bottom: var(--space-4);">
+          <table style="font-size: 0.9rem;">
+            <thead>
+              <tr>
+                <th style="width: 22%;">Term</th>
+                <th style="width: 15%;">Notation</th>
+                <th>Academic Definition</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Plaintext</strong></td>
+                <td><code>P</code> or <code>M</code></td>
+                <td>The original, unencrypted intelligible message or data payload.</td>
+              </tr>
+              <tr>
+                <td><strong>Ciphertext</strong></td>
+                <td><code>C</code></td>
+                <td>The transformed, unreadable encrypted data produced by applying an encryption algorithm.</td>
+              </tr>
+              <tr>
+                <td><strong>Key</strong></td>
+                <td><code>K</code></td>
+                <td>A piece of information (parameter) that controls the operation of the cryptographic algorithm.</td>
+              </tr>
+              <tr>
+                <td><strong>Encryption</strong></td>
+                <td><code>E_K(P) = C</code></td>
+                <td>The mathematical process that converts plaintext into ciphertext using a key.</td>
+              </tr>
+              <tr>
+                <td><strong>Decryption</strong></td>
+                <td><code>D_K(C) = P</code></td>
+                <td>The inverse mathematical process that recovers the plaintext from ciphertext using a key.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Visual Diagram -->
+        <div style="background-color: #0f172a; color: #e2e8f0; padding: var(--space-6); border-radius: var(--radius-md); text-align: center; font-family: var(--font-mono); font-size: 0.85rem;">
+          <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+            <div style="background: #1e293b; padding: 0.75rem 1.25rem; border-radius: 6px; border: 1px solid #334155;">
+              <span style="color: #94a3b8; display: block; font-size: 0.7rem;">SENDER</span>
+              <strong>Plaintext (P)</strong>
+            </div>
+
+            <div style="color: #38bdf8;">
+              <span>──[ Encryption E_K ]──▶</span>
+            </div>
+
+            <div style="background: rgba(37,99,235,0.2); padding: 0.75rem 1.25rem; border-radius: 6px; border: 1px dashed #3b82f6;">
+              <span style="color: #93c5fd; display: block; font-size: 0.7rem;">UNTRUSTED CHANNEL</span>
+              <strong style="color: #60a5fa;">Ciphertext (C)</strong>
+            </div>
+
+            <div style="color: #10b981;">
+              <span>──[ Decryption D_K ]──▶</span>
+            </div>
+
+            <div style="background: #1e293b; padding: 0.75rem 1.25rem; border-radius: 6px; border: 1px solid #334155;">
+              <span style="color: #94a3b8; display: block; font-size: 0.7rem;">RECIPIENT</span>
+              <strong>Recovered (P)</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Symmetric vs Asymmetric -->
+      <section class="card mb-8">
+        <h2 style="margin-bottom: var(--space-4);">Symmetric vs. Asymmetric Cryptography</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6);">
+          <div>
+            <h3>Symmetric Cryptography (Secret-Key)</h3>
+            <p style="font-size: 0.925rem;">
+              Both communication parties share a single, identical secret key for both encryption and decryption:
+              <code>D_K(E_K(P)) = P</code>.
+            </p>
+            <ul>
+              <li><strong>Advantages:</strong> Extremely high computational throughput; ideal for bulk data encryption.</li>
+              <li><strong>Challenge:</strong> Secure key distribution (how to transmit the shared key securely without prior trust).</li>
+              <li><strong>Examples:</strong> DES (historical), AES (modern standard), ChaCha20.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Asymmetric Cryptography (Public-Key)</h3>
+            <p style="font-size: 0.925rem;">
+              Each entity possesses a mathematically linked keypair: a <strong>Public Key</strong> freely distributed for encryption, and a <strong>Private Key</strong> kept strictly secret for decryption.
+            </p>
+            <ul>
+              <li><strong>Advantages:</strong> Solves key distribution; enables digital signatures and non-repudiation.</li>
+              <li><strong>Challenge:</strong> Computationally intensive; typically 1,000x slower than symmetric ciphers.</li>
+              <li><strong>Examples:</strong> RSA, Diffie-Hellman, ECDSA, Ed25519.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Historical vs Modern Overview -->
+      <section class="card mb-8">
+        <h2 style="margin-bottom: var(--space-4);">Historical Evolution of Cryptographic Design</h2>
+        <div style="overflow-x: auto;">
+          <table style="font-size: 0.875rem;">
+            <thead>
+              <tr>
+                <th>Era / Class</th>
+                <th>Underlying Primitive</th>
+                <th>Key Algorithms</th>
+                <th>Security Level</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Classical Ciphers</strong></td>
+                <td>Alphabet substitution & transposition</td>
+                <td>Caesar, Playfair, Hill, Rail Fence</td>
+                <td><span class="badge badge-warning">Trivial to break</span> via frequency analysis & linear algebra</td>
+              </tr>
+              <tr>
+                <td><strong>Early Block Ciphers</strong></td>
+                <td>Feistel network, 56-bit keys</td>
+                <td>Data Encryption Standard (DES)</td>
+                <td><span class="badge badge-warning">Obsolete</span> (vulnerable to brute-force key search)</td>
+              </tr>
+              <tr>
+                <td><strong>Modern Symmetric</strong></td>
+                <td>Substitution-Permutation Network, Galois Fields</td>
+                <td>AES-128, AES-256 (GCM mode)</td>
+                <td><span class="badge badge-success">High Security</span> (resistant to linear/differential cryptanalysis)</td>
+              </tr>
+              <tr>
+                <td><strong>Public-Key & Signatures</strong></td>
+                <td>Number theory (Factoring, Discrete Log, Elliptic Curves)</td>
+                <td>RSA-2048, Diffie-Hellman, DSS / ECDSA</td>
+                <td><span class="badge badge-success">High Security</span> (when parameters exceed 2048 bits / 256-bit ECC)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Navigation prompt -->
+      <div class="card" style="text-align: center; background-color: var(--bg-surface-alt); padding: var(--space-8);">
+        <h3>Ready to Explore the Experiments?</h3>
+        <p style="max-width: 600px; margin: 0 auto var(--space-4);">
+          Visit the objectives page to review specific learning outcomes or proceed directly to the interactive simulation directory.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="objectives.html" class="btn btn-secondary">Review Lab Objectives</a>
+          <a href="experiments.html" class="btn btn-primary">Open Experiment Directory →</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+          <div class="footer-config-info">
+            <div class="footer-config-row">
+              <span class="footer-config-label">Institution:</span>
+              <span class="footer-config-value" data-config="institution">[Department / College Name]</span>
+            </div>
+            <div class="footer-config-row">
+              <span class="footer-config-label">Department:</span>
+              <span class="footer-config-value" data-config="department">Department of Computer Science and Engineering</span>
+            </div>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="introduction.html">Introduction</a></li>
+            <li><a href="objectives.html">Objectives</a></li>
+            <li><a href="experiments.html">List of Experiments</a></li>
+            <li><a href="resources.html">Learning Resources</a></li>
+            <li><a href="feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="experiments/classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="experiments/transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="experiments/des.html">03. DES Algorithm</a></li>
+            <li><a href="experiments/aes.html">04. AES Algorithm</a></li>
+            <li><a href="experiments/rsa.html">05. RSA Cryptography</a></li>
+            <li><a href="experiments/diffie-hellman.html">06. Diffie-Hellman Exchange</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197 (AES)</a></li>
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/180-4/final" target="_blank" rel="noopener">NIST FIPS 180-4 (SHA)</a></li>
+            <li><a href="resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/navigation.js"></script>
+</body>
+</html>

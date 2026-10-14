@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Course Objectives & Measurable Learning Outcomes - Principles of Cryptography Virtual Lab.">
+  <title>Objectives - Principles of Cryptography Virtual Lab</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/experiments.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="introduction.html" class="nav-link">Introduction</a>
+        <a href="objectives.html" class="nav-link active">Objectives</a>
+        <a href="experiments.html" class="nav-link">Experiments</a>
+        <a href="resources.html" class="nav-link">Resources</a>
+        <a href="feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">Objectives</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="site-main">
+    <div class="container" style="max-width: 960px;">
+
+      <div class="academic-section">
+        <h1>Course Objectives & Learning Outcomes</h1>
+        <p class="academic-lead">
+          The Principles of Cryptography Virtual Laboratory provides hands-on experimental reinforcement of theoretical cryptography concepts taught in undergraduate and graduate computer science programs.
+        </p>
+        <p>
+          Each laboratory experiment is structured around measurable competencies mapped to Bloom's Revised Taxonomy, bridging formal mathematics with interactive algorithm visualization.
+        </p>
+      </div>
+
+      <!-- Specific Measurable Outcomes -->
+      <section class="card mb-8">
+        <h2 style="margin-bottom: var(--space-4);">Measurable Student Learning Outcomes</h2>
+        <p style="margin-bottom: var(--space-6);">Upon successful completion of all virtual lab modules, students will be able to:</p>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 1</span>
+            <div>
+              <strong style="color: var(--text-main);">Explain Substitution and Transposition Mechanisms:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Distinguish between confusion-based character substitution and diffusion-based positional permutation in historical ciphers.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 2</span>
+            <div>
+              <strong style="color: var(--text-main);">Perform Caesar, Playfair, and Hill Cipher Transformations:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Compute Caesar modular shifts, generate 5x5 Playfair keyword matrices with digraph rules, and execute Hill cipher matrix vector multiplications modulo 26 with determinant invertibility checks.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 3</span>
+            <div>
+              <strong style="color: var(--text-main);">Execute Row-Major and Column-Major Transpositions:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Model zigzag wave paths across arbitrary rail depths and perform rectangular grid-based column-major transformations and inverse reconstructions.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 4</span>
+            <div>
+              <strong style="color: var(--text-main);">Understand the DES and AES Encryption Workflows:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Trace the 16 Feistel rounds, S-box non-linearities, and subkey schedules of DES, and analyze the 128-bit state transformations of AES (SubBytes, ShiftRows, MixColumns, AddRoundKey) and AES-GCM authenticated encryption.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 5</span>
+            <div>
+              <strong style="color: var(--text-main);">Demonstrate RSA Asymmetric Encryption and Decryption:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Calculate modulus n, Euler totient phi(n), coprime public exponent e, and modular inverse private exponent d, executing repeated-squaring modular exponentiation and modern RSA-OAEP.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 6</span>
+            <div>
+              <strong style="color: var(--text-main);">Explain Diffie–Hellman Key Exchange and Man-in-the-Middle Risks:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Simulate Alice and Bob establishing symmetric shared secrets over an unauthenticated channel, and analyze how an active adversary can intercept public parameters without digital certificates.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 7</span>
+            <div>
+              <strong style="color: var(--text-main);">Calculate and Interpret SHA-1 and MD5 Message Digests:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Evaluate one-way hashing, observe the Avalanche Effect bit distributions, and explain collision vulnerabilities (SHAttered, Wang et al.).</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 8</span>
+            <div>
+              <strong style="color: var(--text-main);">Master Digital Signature Generation and Verification:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Execute Digital Signature Standard (DSS / DSA) signing and verification equations, and demonstrate how modifying a message payload causes immediate verification rejection.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-3) var(--space-4); background-color: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <span class="badge badge-primary" style="flex-shrink: 0; margin-top: 2px;">CO 9</span>
+            <div>
+              <strong style="color: var(--text-main);">Identify the Security Limitations of Historical Algorithms:</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">Articulate why DES, MD5, SHA-1, and single-parameter Caesar ciphers must be categorized as obsolete/educational, while recommending modern standards (AES-GCM, SHA-256, RSA-OAEP, ECDSA).</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Bloom's Taxonomy Alignment Table -->
+      <section class="card mb-8">
+        <h2 style="margin-bottom: var(--space-4);">Bloom's Taxonomy Competency Matrix</h2>
+        <div style="overflow-x: auto;">
+          <table style="font-size: 0.875rem;">
+            <thead>
+              <tr>
+                <th>Bloom's Level</th>
+                <th>Target Action Verbs</th>
+                <th>Mapped Virtual Lab Experiments</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Remembering & Understanding</strong></td>
+                <td>Define, Describe, Explain, Identify</td>
+                <td>Introduction, Aim, Theory sections of all 9 experiments</td>
+              </tr>
+              <tr>
+                <td><strong>Applying</strong></td>
+                <td>Calculate, Encrypt, Decrypt, Compute, Sign</td>
+                <td>Interactive Practice tabs: Caesar, Playfair, Hill, Rail Fence, RSA, DSS</td>
+              </tr>
+              <tr>
+                <td><strong>Analyzing</strong></td>
+                <td>Differentiate, Trace, Inspect, Deconstruct</td>
+                <td>DES 16-round Feistel inspection, AES 4x4 state matrix, SHA-1/MD5 Avalanche tests</td>
+              </tr>
+              <tr>
+                <td><strong>Evaluating</strong></td>
+                <td>Assess, Verify, Validate, Compare</td>
+                <td>Diagnostic Pretests, Posttest Assessments, MitM Attack Simulation, Tamper Detection</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="card" style="text-align: center; background-color: var(--bg-surface-alt); padding: var(--space-8);">
+        <h3>Begin Your Laboratory Session</h3>
+        <p style="margin: 0 auto var(--space-4); max-width: 600px;">
+          Explore the complete catalogue of virtual experiments and filter by course domain.
+        </p>
+        <a href="experiments.html" class="btn btn-primary btn-lg">Browse All 9 Experiments →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="introduction.html">Introduction</a></li>
+            <li><a href="objectives.html">Objectives</a></li>
+            <li><a href="experiments.html">List of Experiments</a></li>
+            <li><a href="resources.html">Learning Resources</a></li>
+            <li><a href="feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="experiments/classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="experiments/transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="experiments/des.html">03. DES Algorithm</a></li>
+            <li><a href="experiments/aes.html">04. AES Algorithm</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197</a></li>
+            <li><a href="resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/navigation.js"></script>
+</body>
+</html>

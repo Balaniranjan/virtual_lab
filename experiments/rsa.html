@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 05: RSA Public-Key Encryption - Mathematical classroom modular arithmetic, prime factorisation principles, and Web Crypto RSA-OAEP 2048-bit encryption.">
+  <title>Experiment 05: RSA Encryption Algorithm - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">05. RSA Encryption Algorithm</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Header -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 05</span>
+          <span class="experiment-category-badge">Asymmetric Cryptography</span>
+        </div>
+        <h1 class="experiment-title">RSA Encryption Algorithm: Number Theoretic Foundations & RSA-OAEP</h1>
+        <p class="experiment-desc">
+          Investigate public-key cryptography via prime number generation, Euler's totient function, modular multiplicative inverse derivation, square-and-multiply exponentiation, and practical 2048-bit RSA-OAEP.
+        </p>
+      </div>
+
+      <!-- Warning Distinction Alert -->
+      <div class="legacy-warning-alert">
+        <span class="legacy-warning-badge">Pedagogical Distinction</span>
+        <div>
+          <strong>Classroom Notice:</strong> Textbook RSA (direct arithmetic c = m^e mod n without padding) is strictly a mathematical teaching model. In production systems, unpadded RSA is malleable and vulnerable; real applications mandate randomized padding (RSA-OAEP) and key sizes of 2048+ bits.
+        </div>
+      </div>
+
+      <!-- 8-Tab Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To demonstrate and analyze the mathematical and computational principles of the RSA public-key algorithm, calculating the modulus, Euler's totient, public and private exponents, executing modular exponentiation via repeated squaring, and contrasting textbook RSA with modern 2048-bit RSA-OAEP encryption.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Validate prime numbers p and q and compute the composite modulus n = p * q.</li>
+            <li>Calculate Euler's totient phi(n) = (p - 1)(q - 1) and find a coprime public exponent e.</li>
+            <li>Compute the modular multiplicative inverse d = e^-1 mod phi(n) using the Extended Euclidean Algorithm.</li>
+            <li>Perform square-and-multiply modular exponentiation for encryption (c = m^e mod n) and decryption (m = c^d mod n).</li>
+            <li>Execute modern 2048-bit RSA-OAEP encryption and keypair export via the Web Crypto API.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Principles of RSA</h2>
+
+          <h3 class="mt-6 mb-3">1. Mathematical Foundation (Euler & Fermat)</h3>
+          <p>
+            Published in 1977 by Ron Rivest, Adi Shamir, and Leonard Adleman, RSA is grounded in Euler's Generalization of Fermat's Little Theorem:
+          </p>
+          <div class="visualizer-container">
+            <p><strong>Euler's Theorem:</strong> If <code>gcd(a, n) = 1</code>, then <code>a^{\phi(n)} &equiv; 1 \pmod{n}</code>.</p>
+            <p>
+              By selecting exponents <code>e</code> and <code>d</code> such that <code>e &times; d &equiv; 1 \pmod{\phi(n)}</code>, we establish that:
+              <br>
+              <code>m^{e \cdot d} = m^{k \cdot \phi(n) + 1} = (m^{\phi(n)})^k \cdot m &equiv; (1)^k \cdot m &equiv; m \pmod{n}</code>.
+            </p>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. Step-by-Step RSA Algorithm</h3>
+          <ol style="margin-left: var(--space-4); line-height: 1.8;">
+            <li><strong>Key Generation:</strong>
+              <ul>
+                <li>Select two distinct large primes <code>p</code> and <code>q</code>.</li>
+                <li>Compute modulus <code>n = p &times; q</code>.</li>
+                <li>Compute Euler's totient <code>\phi(n) = (p - 1)(q - 1)</code>.</li>
+                <li>Select public exponent <code>e</code> such that <code>1 &lt; e &lt; \phi(n)</code> and <code>gcd(e, \phi(n)) = 1</code> (commonly 65537).</li>
+                <li>Compute private exponent <code>d = e^{-1} \pmod{\phi(n)}</code> such that <code>(d &times; e) \bmod \phi(n) = 1</code> using the Extended Euclidean Algorithm.</li>
+                <li><strong>Public Key:</strong> <code>(e, n)</code> | <strong>Private Key:</strong> <code>(d, n)</code>.</li>
+              </ul>
+            </li>
+            <li><strong>Encryption:</strong>
+              <br>Given message integer <code>m &lt; n</code>, calculate ciphertext: <code>c = m^e \bmod n</code>.
+            </li>
+            <li><strong>Decryption:</strong>
+              <br>Given ciphertext <code>c</code>, calculate original message: <code>m = c^d \bmod n</code>.
+            </li>
+          </ol>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>3. Why Padding (OAEP) is Mandatory in Practice</h3>
+          <p>
+            In textbook RSA, if an attacker encrypts two plaintexts <code>m_1</code> and <code>m_2</code>, the product of their ciphertexts equals the encryption of their product:
+            <code>E(m_1) &times; E(m_2) = (m_1^e)(m_2^e) \bmod n = (m_1 m_2)^e \bmod n = E(m_1 m_2)</code>.
+          </p>
+          <p>
+            This <strong>multiplicative homomorphic property</strong> makes textbook RSA malleable and insecure against chosen-ciphertext attacks (IND-CCA2). <strong>Optimal Asymmetric Encryption Padding (RSA-OAEP)</strong> introduces two cryptographic hash steps and a random seed, transforming deterministic RSA into a semantically secure, non-malleable scheme.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>
+              <strong>Section 1: Mathematical Classroom Demo:</strong>
+              <ul>
+                <li>Enter two small distinct primes <code>p</code> and <code>q</code> (e.g. <code>p=61, q=53</code> or <code>p=17, q=11</code>).</li>
+                <li>Specify or auto-generate a valid coprime exponent <code>e</code>.</li>
+                <li>Click <strong>Generate Key Parameters</strong>. Observe the calculated <code>n</code>, <code>\phi(n)</code>, and private exponent <code>d</code>.</li>
+                <li>Enter a message integer <code>m &lt; n</code> and click <strong>Encrypt Number</strong>.</li>
+                <li>Trace the square-and-multiply binary exponentiation steps in the visualizer panel.</li>
+                <li>Click <strong>Decrypt Number</strong> to verify that <code>c^d \bmod n</code> recovers <code>m</code>.</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Section 2: Practical Web Crypto RSA-OAEP:</strong>
+              <ul>
+                <li>Click <strong>Generate 2048-bit Keypair</strong>. Inspect the exported SPKI public key and PKCS8 private key PEM blocks.</li>
+                <li>Enter an arbitrary text message and click <strong>Encrypt (RSA-OAEP)</strong>.</li>
+                <li>Observe the resulting Base64 and Hex ciphertext.</li>
+                <li>Click <strong>Decrypt (RSA-OAEP)</strong> to verify authenticated decryption.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="rsaPretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>Canonical Classroom Demonstration</h2>
+          <p>Standard textbook RSA arithmetic walkthrough with small primes:</p>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-6); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600); margin-top: var(--space-4);">
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
+              <div><strong>Selected Primes:</strong> <code>p = 61, q = 53</code></div>
+              <div><strong>Modulus n:</strong> <code>n = 61 * 53 = 3233</code></div>
+              <div><strong>Totient phi(n):</strong> <code>phi(n) = (61 - 1) * (53 - 1) = 60 * 52 = 3120</code></div>
+              <div><strong>Public Exponent e:</strong> <code>e = 17</code> (Coprime to 3120: gcd(17, 3120) = 1)</div>
+              <div><strong>Private Exponent d:</strong> <code>d = 17^-1 mod 3120 = 2753</code> (since 17 * 2753 = 46801 = 15 * 3120 + 1)</div>
+              <div><strong>Message (m):</strong> <code>65</code> ('A')</div>
+              <div><strong>Encryption:</strong> <code>c = 65^17 mod 3233 = 2790</code></div>
+              <div><strong>Decryption:</strong> <code>m = 2790^2753 mod 3233 = 65</code> &equiv; 'A'</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE WORKSPACE)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+
+        <!-- PART 1: Mathematical Classroom Demo -->
+        <div class="card mb-8">
+          <div class="card-header">
+            <h3 class="card-title">1. Mathematical Classroom Demonstration (Small Primes)</h3>
+            <span class="badge badge-neutral">Textbook RSA</span>
+          </div>
+
+          <div id="rsaMathAlertContainer"></div>
+
+          <div class="exp-workspace-grid" style="margin-bottom:0;">
+
+            <!-- Left Controls -->
+            <div>
+              <div class="d-flex gap-3">
+                <div class="form-group" style="flex:1;">
+                  <label class="form-label" for="rsaInputP">Prime p</label>
+                  <input type="number" id="rsaInputP" class="form-input form-mono" value="61">
+                </div>
+                <div class="form-group" style="flex:1;">
+                  <label class="form-label" for="rsaInputQ">Prime q</label>
+                  <input type="number" id="rsaInputQ" class="form-input form-mono" value="53">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="rsaInputE">Public Exponent e (Coprime to &phi;(n))</label>
+                <div class="input-with-action">
+                  <input type="number" id="rsaInputE" class="form-input form-mono" value="17">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="calculateRSAParameters()">
+                    Calculate Keys
+                  </button>
+                </div>
+              </div>
+
+              <!-- Computed parameters box -->
+              <div class="visualizer-container" id="rsaParamBox" style="font-family:var(--font-mono); font-size:0.85rem; line-height:1.6;">
+                <div><strong>Modulus n:</strong> <span id="rsaDispN" style="color:var(--primary-700);">3233</span></div>
+                <div><strong>Totient &phi;(n):</strong> <span id="rsaDispPhi">3120</span></div>
+                <div><strong>Public Key (e, n):</strong> <span id="rsaDispPubKey" style="color:var(--cyan-700);">(17, 3233)</span></div>
+                <div><strong>Private Key (d, n):</strong> <span id="rsaDispPrivKey" style="color:#059669;">(2753, 3233)</span></div>
+              </div>
+
+              <div class="form-group mt-4">
+                <label class="form-label" for="rsaInputM">Message Integer (M &lt; n)</label>
+                <input type="number" id="rsaInputM" class="form-input form-mono" value="65">
+              </div>
+
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-primary" onclick="runRSAMathEncrypt()" style="flex:1;">
+                  Encrypt Number
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="runRSAMathDecrypt()" style="flex:1;">
+                  Decrypt Number
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Results & Square-and-Multiply Steps -->
+            <div>
+              <div class="form-group">
+                <label class="form-label">Arithmetic Ciphertext (c = m^e mod n)</label>
+                <input type="text" id="rsaCipherNum" class="form-input form-mono" readonly>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Recovered Message Integer (m = c^d mod n)</label>
+                <input type="text" id="rsaDecryptedNum" class="form-input form-mono" readonly>
+              </div>
+
+              <div class="visualizer-container">
+                <div class="visualizer-title">Modular Exponentiation: Square-and-Multiply Trace</div>
+                <div id="rsaExponentiationSteps" style="max-height:210px; overflow-y:auto; font-family:var(--font-mono); font-size:0.775rem;">
+                  <p class="text-muted text-center" style="margin:var(--space-4) 0;">Awaiting execution to trace binary exponentiation steps...</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- PART 2: Modern Web Crypto RSA-OAEP -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">2. Modern Practical Implementation: Web Crypto RSA-OAEP (2048-bit)</h3>
+            <span class="badge badge-success">SHA-256 OAEP</span>
+          </div>
+
+          <div id="rsaPracticalAlertContainer"></div>
+
+          <div class="exp-workspace-grid" style="margin-bottom:0;">
+            <div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label" style="margin:0;">RSA-2048 Keypair</label>
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="generatePracticalRSAKeys()">
+                  Generate 2048-bit Keypair
+                </button>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="rsaPubKeyPem">Public Key (SPKI PEM)</label>
+                <textarea id="rsaPubKeyPem" class="form-textarea form-mono" rows="3" readonly style="font-size:0.75rem;"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="rsaPlainTextPractical">Message Payload to Encrypt</label>
+                <textarea id="rsaPlainTextPractical" class="form-textarea" rows="3">Principles of Cryptography: Verified 2048-bit RSA-OAEP payload.</textarea>
+              </div>
+
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-primary" onclick="runPracticalRSAEncrypt()" style="flex:1;">
+                  Encrypt (RSA-OAEP)
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="runPracticalRSADecrypt()" style="flex:1;">
+                  Decrypt (RSA-OAEP)
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="form-group">
+                <label class="form-label" for="rsaCipherBase64">Ciphertext (Base64 Encoded - 256 bytes)</label>
+                <textarea id="rsaCipherBase64" class="form-textarea form-mono" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="rsaRecoveredPractical">Recovered Plaintext</label>
+                <input type="text" id="rsaRecoveredPractical" class="form-input" readonly>
+              </div>
+
+              <div class="alert alert-info" style="font-size:0.8rem; margin-bottom:0;">
+                <div class="alert-content">
+                  <strong>RSA-OAEP Protection:</strong> Optimal Asymmetric Encryption Padding injects randomness before exponentiation, ensuring identical plaintexts yield different ciphertexts and protecting against Bleichenbacher padding oracle attacks.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="rsaPosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>R. L. Rivest, A. Shamir, and L. Adleman.</strong> "A Method for Obtaining Digital Signatures and Public-Key Cryptosystems." <em>Communications of the ACM</em>, Vol. 21, No. 2 (1978), pp. 120–126.
+            </li>
+            <li>
+              <strong>M. Bellare and P. Rogaway.</strong> "Optimal Asymmetric Encryption - How to Encrypt with RSA." <em>Advances in Cryptology – EUROCRYPT '94</em>. Springer, 1994.
+            </li>
+            <li>
+              <strong>IETF RFC 8017.</strong> <em>PKCS #1: RSA Cryptography Specifications Version 2.2</em>. Internet Engineering Task Force, 2016.
+            </li>
+            <li>
+              <strong>William Stallings.</strong> <em>Cryptography and Network Security</em> (8th Edition), Chapter 9: Public-Key Cryptography and RSA. Pearson, 2020.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Pagination Footer -->
+      <div class="exp-pagination-nav">
+        <a href="aes.html" class="exp-nav-btn">
+          ← Previous: 04. AES Algorithm
+        </a>
+        <a href="diffie-hellman.html" class="exp-nav-btn">
+          Next: 06. Diffie-Hellman Key Exchange →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+            <li><a href="rsa.html">05. RSA Cryptography</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://tools.ietf.org/html/rfc8017" target="_blank" rel="noopener">RFC 8017 (PKCS #1)</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/rsa.js"></script>
+
+  <script>
+    // ==========================================
+    // 1. MATHEMATICAL CLASSROOM RSA LOGIC
+    // ==========================================
+    let rsaCurrentParams = null;
+
+    function calculateRSAParameters() {
+      Validation.clearError('rsaMathAlertContainer');
+      const p = document.getElementById('rsaInputP').value;
+      const q = document.getElementById('rsaInputQ').value;
+      const e = document.getElementById('rsaInputE').value;
+
+      const res = RSAHelper.generateEducationalKeys(p, q, e);
+      if (!res.success) {
+        Validation.showError('rsaMathAlertContainer', res.error);
+        return;
+      }
+
+      rsaCurrentParams = res;
+      document.getElementById('rsaDispN').textContent = res.n;
+      document.getElementById('rsaDispPhi').textContent = res.phi;
+      document.getElementById('rsaDispPubKey').textContent = `(${res.e}, ${res.n})`;
+      document.getElementById('rsaDispPrivKey').textContent = `(${res.d}, ${res.n})`;
+      document.getElementById('rsaInputE').value = res.e;
+      MainApp.showToast('RSA parameters generated successfully.');
+    }
+
+    function runRSAMathEncrypt() {
+      Validation.clearError('rsaMathAlertContainer');
+      if (!rsaCurrentParams) calculateRSAParameters();
+      if (!rsaCurrentParams) return;
+
+      const m = document.getElementById('rsaInputM').value;
+      if (!m) {
+        Validation.showError('rsaMathAlertContainer', 'Please provide a message integer.');
+        return;
+      }
+
+      const res = RSAHelper.encryptNumber(m, rsaCurrentParams.e, rsaCurrentParams.n);
+      if (!res.success) {
+        Validation.showError('rsaMathAlertContainer', res.error);
+        return;
+      }
+
+      document.getElementById('rsaCipherNum').value = res.ciphertext;
+      document.getElementById('rsaDecryptedNum').value = '';
+      renderExponentiationSteps(res.steps, `Encryption: ${m}^${rsaCurrentParams.e} mod ${rsaCurrentParams.n}`);
+      MainApp.showToast('Textbook RSA encryption complete.');
+    }
+
+    function runRSAMathDecrypt() {
+      Validation.clearError('rsaMathAlertContainer');
+      if (!rsaCurrentParams) calculateRSAParameters();
+      if (!rsaCurrentParams) return;
+
+      const c = document.getElementById('rsaCipherNum').value;
+      if (!c) {
+        Validation.showError('rsaMathAlertContainer', 'Please encrypt a message first or enter ciphertext integer.');
+        return;
+      }
+
+      const res = RSAHelper.decryptNumber(c, rsaCurrentParams.d, rsaCurrentParams.n);
+      if (!res.success) {
+        Validation.showError('rsaMathAlertContainer', res.error);
+        return;
+      }
+
+      document.getElementById('rsaDecryptedNum').value = res.plaintext;
+      renderExponentiationSteps(res.steps, `Decryption: ${c}^${rsaCurrentParams.d} mod ${rsaCurrentParams.n}`);
+      MainApp.showToast('Textbook RSA decryption complete.');
+    }
+
+    function renderExponentiationSteps(steps, title) {
+      const container = document.getElementById('rsaExponentiationSteps');
+      if (!container) return;
+      let html = `<div style="font-weight:700; color:var(--primary-700); margin-bottom:6px;">${title}</div>`;
+      steps.forEach(s => {
+        html += `
+          <div style="border-bottom:1px solid var(--border-color); padding:3px 0;">
+            <span style="color:var(--text-light);">Bit [${s.bit}]:</span> ${s.action} &rarr; <strong>${s.currentValue}</strong>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // 2. MODERN WEB CRYPTO RSA-OAEP LOGIC
+    // ==========================================
+    let practicalKeyPair = null;
+
+    async function generatePracticalRSAKeys() {
+      Validation.clearError('rsaPracticalAlertContainer');
+      try {
+        MainApp.showToast('Generating 2048-bit RSA keypair in browser...');
+        const res = await RSAHelper.generatePracticalKeyPair();
+        practicalKeyPair = res.keyPair;
+        document.getElementById('rsaPubKeyPem').value = res.publicKeyPem;
+        MainApp.showToast('2048-bit RSA keypair generated successfully.');
+      } catch (err) {
+        Validation.showError('rsaPracticalAlertContainer', 'Web Crypto RSA generation error: ' + err.message);
+      }
+    }
+
+    async function runPracticalRSAEncrypt() {
+      Validation.clearError('rsaPracticalAlertContainer');
+      if (!practicalKeyPair) {
+        await generatePracticalRSAKeys();
+      }
+      const text = document.getElementById('rsaPlainTextPractical').value;
+      if (!text) {
+        Validation.showError('rsaPracticalAlertContainer', 'Please provide a message payload to encrypt.');
+        return;
+      }
+
+      try {
+        const res = await RSAHelper.encryptPractical(text, practicalKeyPair.publicKey);
+        document.getElementById('rsaCipherBase64').value = res.base64;
+        document.getElementById('rsaRecoveredPractical').value = '';
+        MainApp.showToast('RSA-OAEP encryption completed.');
+      } catch (e) {
+        Validation.showError('rsaPracticalAlertContainer', 'Encryption failed: ' + e.message);
+      }
+    }
+
+    async function runPracticalRSADecrypt() {
+      Validation.clearError('rsaPracticalAlertContainer');
+      const b64 = document.getElementById('rsaCipherBase64').value;
+      if (!b64 || !practicalKeyPair) {
+        Validation.showError('rsaPracticalAlertContainer', 'Ciphertext and active private key are required.');
+        return;
+      }
+
+      const res = await RSAHelper.decryptPractical(b64, practicalKeyPair.privateKey);
+      if (res.success) {
+        document.getElementById('rsaRecoveredPractical').value = res.plaintext;
+        MainApp.showToast('RSA-OAEP decryption verified!');
+      } else {
+        Validation.showError('rsaPracticalAlertContainer', res.error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      QuizEngine.renderQuiz('rsa', 'pretest', 'rsaPretestContainer');
+      QuizEngine.renderQuiz('rsa', 'posttest', 'rsaPosttestContainer');
+      calculateRSAParameters();
+      runRSAMathEncrypt();
+      await generatePracticalRSAKeys();
+    });
+  </script>
+</body>
+</html>

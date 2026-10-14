@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 09: Digital Signature Standard (DSS / DSA) - Historical DSA signing/verification equations, tamper detection, and modern Web Crypto ECDSA simulation.">
+  <title>Experiment 09: Digital Signature Standard (DSS) - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">09. Digital Signature Standard (DSS)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Header -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 09</span>
+          <span class="experiment-category-badge">Digital Signatures</span>
+        </div>
+        <h1 class="experiment-title">Digital Signature Standard (DSS / DSA): Signing, Verification & Tamper Detection</h1>
+        <p class="experiment-desc">
+          Master the mathematical mechanics of the historical Digital Signature Algorithm (DSA - FIPS PUB 186-4), simulate signature generation and verification equations, observe tamper detection, and compare with modern Web Crypto ECDSA.
+        </p>
+      </div>
+
+      <!-- Distinction Notice -->
+      <div class="legacy-warning-alert">
+        <span class="legacy-warning-badge">Standard Distinction</span>
+        <div>
+          <strong>Algorithm Notice:</strong> Historical finite-field DSA is demonstrated mathematically below. Modern browser cryptography standards have transitioned to <strong>ECDSA</strong> (Elliptic Curve DSA) and <strong>Ed25519</strong>. Both the historical DSA mathematical engine and a modern Web Crypto ECDSA (P-256) demonstration are provided in this laboratory.
+        </div>
+      </div>
+
+      <!-- 8-Tab Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To analyze, simulate, and verify the Digital Signature Standard (DSS / DSA), evaluating key generation, ephemeral parameter selection, message digest signing, verification equations, and demonstrating how modifying a signed payload triggers immediate cryptographic rejection.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Understand the tripartite security goals of digital signatures: origin authentication, data integrity, and non-repudiation.</li>
+            <li>Trace DSA key generation: domain parameters (p, q, g), private signing key x, and public verification key y.</li>
+            <li>Execute the DSA signature generation equations (r, s) and verification checks (w, u1, u2, v).</li>
+            <li>Demonstrate that altering a single character in the message causes the computed verification value v to mismatch r.</li>
+            <li>Execute a modern ECDSA (P-256 with SHA-256) signature workflow via the Web Crypto API.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Principles of Digital Signatures</h2>
+
+          <h3 class="mt-6 mb-3">1. Foundational Security Objectives</h3>
+          <p>
+            While encryption ensures confidentiality, a <strong>digital signature</strong> provides mathematical proof of three distinct properties:
+          </p>
+          <ul>
+            <li><strong>Authenticity:</strong> Confirms that the message was genuinely signed by the entity controlling the private key.</li>
+            <li><strong>Integrity:</strong> Proves that the message has not been altered since it was signed.</li>
+            <li><strong>Non-repudiation:</strong> The signer cannot plausibly dispute the validity of the signature, because only their private key could have produced it.</li>
+          </ul>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. The Historical Digital Signature Algorithm (DSA)</h3>
+          <p>
+            Standardized in FIPS PUB 186 by NIST in 1994, DSA operates over finite cyclic groups:
+          </p>
+          <div class="visualizer-container">
+            <p><strong>1. Domain Parameters (Public):</strong></p>
+            <ul>
+              <li><code>p</code>: A large prime modulus (e.g. 1024 to 3072 bits).</li>
+              <li><code>q</code>: A prime divisor of <code>(p - 1)</code> (e.g. 160 or 256 bits).</li>
+              <li><code>g</code>: A generator of subgroup of order <code>q</code> modulo <code>p</code>: <code>g = h^{(p-1)/q} \bmod p &gt; 1</code>.</li>
+            </ul>
+
+            <p><strong>2. Key Generation:</strong></p>
+            <ul>
+              <li><strong>Private Key (x):</strong> Select random integer <code>0 &lt; x &lt; q</code>.</li>
+              <li><strong>Public Key (y):</strong> Compute <code>y = g^x \bmod p</code>.</li>
+            </ul>
+
+            <p><strong>3. Signature Generation:</strong></p>
+            <p>To sign message <code>M</code> with hash <code>H(M)</code>:</p>
+            <ol style="margin-left:var(--space-4);">
+              <li>Select random per-message ephemeral integer <code>k</code> such that <code>0 &lt; k &lt; q</code>.</li>
+              <li>Compute <code>r = (g^k \bmod p) \bmod q</code>.</li>
+              <li>Compute <code>s = k^{-1} (H(M) + x \cdot r) \bmod q</code>.</li>
+              <li>The digital signature is the pair <strong><code>(r, s)</code></strong>.</li>
+            </ol>
+
+            <p><strong>4. Signature Verification:</strong></p>
+            <p>Given message <code>M</code>, public key <code>y</code>, and signature <code>(r, s)</code>:</p>
+            <ol style="margin-left:var(--space-4);">
+              <li>Verify that <code>0 &lt; r &lt; q</code> and <code>0 &lt; s &lt; q</code>.</li>
+              <li>Compute <code>w = s^{-1} \bmod q</code>.</li>
+              <li>Compute <code>u_1 = (H(M) \cdot w) \bmod q</code> and <code>u_2 = (r \cdot w) \bmod q</code>.</li>
+              <li>Compute verification value: <code>v = ((g^{u_1} \cdot y^{u_2}) \bmod p) \bmod q</code>.</li>
+              <li><strong>Validation:</strong> The signature is accepted as valid if and only if <strong><code>v == r</code></strong>.</li>
+            </ol>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>3. The Critical Ephemeral Key (k) Rule</h3>
+          <p>
+            The value <code>k</code> must be cryptographically unpredictable and <strong>never reused</strong>. If an attacker observes two signatures <code>(r, s_1)</code> and <code>(r, s_2)</code> sharing the same <code>k</code>:
+            <br>
+            <code>(s_1 - s_2) = k^{-1}(H_1 - H_2) \implies k = (H_1 - H_2)(s_1 - s_2)^{-1} \bmod q</code>.
+            <br>
+            Once <code>k</code> is known, the signer's private key <code>x</code> can be computed directly: <code>x = r^{-1}(s_1 \cdot k - H_1) \bmod q</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>
+              <strong>Section 1: Historical DSA Simulation:</strong>
+              <ul>
+                <li>Select domain parameters (e.g. <code>p=79, q=13, g=2</code>).</li>
+                <li>Observe the derived public key <code>y = g^x \bmod p</code>.</li>
+                <li>Enter a message (e.g. <code>PAY $5000 TO UNIVERSITY</code>).</li>
+                <li>Click <strong>Generate DSA Signature</strong>. Observe the calculated signature pair <code>(r, s)</code>.</li>
+                <li>Click <strong>Verify Signature</strong> to inspect the intermediate calculations: <code>w, u1, u2, v</code> and confirm that <code>v === r</code>.</li>
+                <li><strong>Tamper Test:</strong> Modify the message text (e.g. change <code>$5000</code> to <code>$9000</code>) and click <strong>Verify Signature</strong>. Observe how the status updates to <strong>TAMPER DETECTED / INVALID SIGNATURE</strong>.</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Section 2: Modern Web Crypto ECDSA:</strong>
+              <ul>
+                <li>Click <strong>Generate ECDSA P-256 Keypair</strong>.</li>
+                <li>Sign an arbitrary message string using SHA-256.</li>
+                <li>Verify the signature and test message alterations with real Web Crypto validation.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="dssPretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>Canonical DSA Classroom Demonstration</h2>
+          <p>Textbook DSA signing with small parameters (p=79, q=13, g=2):</p>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-6); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600); margin-top: var(--space-4);">
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
+              <div><strong>Domain Parameters:</strong> <code>p = 79, q = 13</code> (13 divides 78), <code>g = 2</code> (2^13 mod 79 = 1)</div>
+              <div><strong>Private Key:</strong> <code>x = 7</code> (0 &lt; 7 &lt; 13)</div>
+              <div><strong>Public Key:</strong> <code>y = g^x mod p = 2^7 mod 79 = 128 mod 79 = 49</code></div>
+              <div><strong>Message:</strong> "HI" with hash <code>H(m) = 5</code></div>
+              <div><strong>Ephemeral Key:</strong> <code>k = 3</code> (k^-1 mod 13 = 9)</div>
+              <div><strong>Signature r:</strong> <code>r = (2^3 mod 79) mod 13 = 8 mod 13 = 8</code></div>
+              <div><strong>Signature s:</strong> <code>s = 9 * (5 + 7*8) mod 13 = 9 * 61 mod 13 = 9 * 9 = 81 mod 13 = 3</code></div>
+              <div style="border-top:1px dashed var(--border-color); padding-top:6px;"><strong>Signature Pair:</strong> <code>(r = 8, s = 3)</code></div>
+              <div><strong>Verification w:</strong> <code>w = 3^-1 mod 13 = 9</code></div>
+              <div><strong>u1, u2:</strong> <code>u1 = (5*9) mod 13 = 6</code>, <code>u2 = (8*9) mod 13 = 7</code></div>
+              <div><strong>Verification v:</strong> <code>v = ((2^6 * 49^7) mod 79) mod 13 = ((64 * 34) mod 79) mod 13 = 437 mod 13 = 8</code></div>
+              <div style="color:#059669; font-weight:700;">&check; Verification: v (8) === r (8) -> VALID DIGITAL SIGNATURE</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE WORKSPACE)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+
+        <!-- PART 1: Historical DSA Educational Engine -->
+        <div class="card mb-8">
+          <div class="card-header">
+            <h3 class="card-title">1. Historical DSA Educational Engine</h3>
+            <span class="badge badge-primary">FIPS 186-4</span>
+          </div>
+
+          <div id="dsaAlertContainer"></div>
+
+          <div class="exp-workspace-grid" style="margin-bottom:0;">
+
+            <!-- Left Signing Controls -->
+            <div>
+              <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:var(--space-3); margin-bottom:var(--space-3);">
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" for="dsaPrimeP">Prime (p)</label>
+                  <input type="number" id="dsaPrimeP" class="form-input form-mono" value="79" readonly>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" for="dsaPrimeQ">Divisor (q)</label>
+                  <input type="number" id="dsaPrimeQ" class="form-input form-mono" value="13" readonly>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" for="dsaGenG">Generator (g)</label>
+                  <input type="number" id="dsaGenG" class="form-input form-mono" value="64" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label" style="margin:0;">Keypair Parameters</label>
+                  <span class="badge badge-neutral" style="font-size:0.7rem;">Domain: p=79, q=13, g=64</span>
+                </div>
+                <div class="visualizer-container" style="font-family:var(--font-mono); font-size:0.8rem; margin:0; padding:var(--space-3);">
+                  <div>Private Key (x): <strong id="dsaDispPrivX" style="color:#dc2626;">7</strong></div>
+                  <div>Public Key (y = g^x mod p): <strong id="dsaDispPubY" style="color:var(--primary-700);">8</strong></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="dsaMessageInput">Message to Sign</label>
+                <textarea id="dsaMessageInput" class="form-textarea form-mono" rows="3">TRANSFER $5000 TO RESEARCH LAB</textarea>
+              </div>
+
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-primary" onclick="runDSASign()" style="flex:1;">
+                  Generate DSA Signature
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="runDSAVerify()" style="flex:1;">
+                  Verify Signature
+                </button>
+              </div>
+
+              <div class="alert alert-info mt-4" style="font-size:0.8rem; margin-bottom:0;">
+                <div class="alert-content">
+                  <strong>Tamper Test Instructions:</strong> Click "Generate DSA Signature", then alter any character in the message above and click "Verify Signature" to observe the verification rejection.
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Verification Results -->
+            <div>
+              <div class="form-group">
+                <label class="form-label">Digital Signature Output Pair (r, s)</label>
+                <div class="d-flex gap-3">
+                  <input type="text" id="dsaSigR" class="form-input form-mono" placeholder="r value" readonly style="font-weight:700;">
+                  <input type="text" id="dsaSigS" class="form-input form-mono" placeholder="s value" readonly style="font-weight:700;">
+                </div>
+              </div>
+
+              <!-- Verification Status Badge -->
+              <div class="form-group">
+                <label class="form-label">Cryptographic Verification Status</label>
+                <div id="dsaVerificationStatusBadge" class="sig-status-badge sig-status-valid" style="width:100%; justify-content:center; padding:0.65rem;">
+                  Awaiting verification...
+                </div>
+              </div>
+
+              <!-- Verification Mathematical Trace -->
+              <div class="visualizer-container">
+                <div class="visualizer-title">Verification Mathematical Pipeline</div>
+                <div id="dsaVerificationTraceBox" style="font-family:var(--font-mono); font-size:0.8rem; line-height:1.6;">
+                  <p class="text-muted text-center" style="margin:var(--space-4) 0;">Click Generate Signature and Verify to trace equations</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- PART 2: Modern Web Crypto ECDSA -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">2. Modern Recommended Standard: Web Crypto ECDSA (P-256 with SHA-256)</h3>
+            <span class="badge badge-success">Active Standard</span>
+          </div>
+
+          <div id="ecdsaAlertContainer"></div>
+
+          <div class="exp-workspace-grid" style="margin-bottom:0;">
+            <div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label" style="margin:0;">ECDSA Keypair</label>
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="generateModernECDSAKeypair()">
+                  Generate New P-256 Keypair
+                </button>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="ecdsaPubKeyPem">Public Key (SPKI PEM)</label>
+                <textarea id="ecdsaPubKeyPem" class="form-textarea form-mono" rows="3" readonly style="font-size:0.75rem;"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="ecdsaMessageText">Payload to Sign</label>
+                <textarea id="ecdsaMessageText" class="form-textarea" rows="3">Department of CSE: Authenticated Document Payload.</textarea>
+              </div>
+
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-primary" onclick="runECDSASign()" style="flex:1;">
+                  Sign (ECDSA)
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="runECDSAVerify()" style="flex:1;">
+                  Verify (ECDSA)
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="form-group">
+                <label class="form-label" for="ecdsaSignatureHex">Raw ECDSA Signature (Hexadecimal)</label>
+                <textarea id="ecdsaSignatureHex" class="form-textarea form-mono" rows="3"></textarea>
+                <span class="form-hint">Tip: Alter any hex digit in this signature to test tamper rejection!</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">ECDSA Verification Result</label>
+                <div id="ecdsaResultBadge" class="sig-status-badge sig-status-valid" style="width:100%; justify-content:center; padding:0.65rem;">
+                  Awaiting execution...
+                </div>
+              </div>
+
+              <div class="alert alert-info" style="font-size:0.8rem; margin-bottom:0;">
+                <div class="alert-content">
+                  <strong>ECDSA Efficiency:</strong> Elliptic Curve DSA provides equal cryptographic strength to a 3072-bit RSA or DSA key using only a 256-bit elliptic curve key, drastically reducing communication overhead.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="dssPosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>NIST.</strong> <em>Digital Signature Standard (DSS)</em>, Federal Information Processing Standards Publication 186-4 (FIPS PUB 186-4). National Institute of Standards and Technology, 2013.
+            </li>
+            <li>
+              <strong>David Kravitz.</strong> "Digital Signature Algorithm." U.S. Patent 5,231,668, assigned to the United States of America (made royalty-free), 1993.
+            </li>
+            <li>
+              <strong>D. Johnson, A. Menezes, and S. Vanstone.</strong> "The Elliptic Curve Digital Signature Algorithm (ECDSA)." <em>International Journal of Information Security</em>, Vol. 1, No. 1 (2001), pp. 36–63.
+            </li>
+            <li>
+              <strong>William Stallings.</strong> <em>Cryptography and Network Security</em> (8th Edition), Chapter 13: Digital Signatures and Authentication Protocols. Pearson, 2020.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Pagination Footer -->
+      <div class="exp-pagination-nav">
+        <a href="md5.html" class="exp-nav-btn">
+          ← Previous: 08. MD5 Message Digest
+        </a>
+        <a href="classical-ciphers.html" class="exp-nav-btn">
+          Return to 01. Classical Ciphers &orarr;
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+            <li><a href="digital-signature.html">09. Digital Signatures</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/186-4/final" target="_blank" rel="noopener">NIST FIPS 186-4 (DSS)</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/digital-signature.js"></script>
+
+  <script>
+    // ==========================================
+    // 1. HISTORICAL DSA EDUCATIONAL ENGINE
+    // ==========================================
+    const dsaP = 79, dsaQ = 13, dsaG = 64, dsaX = 7;
+    let dsaY = 8;
+
+    function runDSASign() {
+      Validation.clearError('dsaAlertContainer');
+      const msg = document.getElementById('dsaMessageInput').value;
+      if (!msg.trim()) {
+        Validation.showError('dsaAlertContainer', 'Please enter a message to sign.');
+        return;
+      }
+
+      const res = DigitalSignature.signDSA(msg, dsaP, dsaQ, dsaG, dsaX);
+      if (!res.success) {
+        Validation.showError('dsaAlertContainer', res.error);
+        return;
+      }
+
+      document.getElementById('dsaSigR').value = res.r;
+      document.getElementById('dsaSigS').value = res.s;
+
+      const badge = document.getElementById('dsaVerificationStatusBadge');
+      badge.className = 'sig-status-badge sig-status-valid';
+      badge.innerHTML = `&check; Digital Signature Generated: (r=${res.r}, s=${res.s})`;
+
+      const traceBox = document.getElementById('dsaVerificationTraceBox');
+      traceBox.innerHTML = `
+        <div><strong>Message Digest H(m):</strong> ${res.hash}</div>
+        <div><strong>Ephemeral Secret k:</strong> ${res.k} (k^-1 mod q = ${res.kInv})</div>
+        <div><strong>Formula for r:</strong> <code>${res.details.formulaR}</code></div>
+        <div><strong>Formula for s:</strong> <code>${res.details.formulaS}</code></div>
+      `;
+
+      MainApp.showToast('DSA signature generated.');
+    }
+
+    function runDSAVerify() {
+      Validation.clearError('dsaAlertContainer');
+      const msg = document.getElementById('dsaMessageInput').value;
+      const r = document.getElementById('dsaSigR').value;
+      const s = document.getElementById('dsaSigS').value;
+
+      if (!r || !s) {
+        Validation.showError('dsaAlertContainer', 'Signature values (r, s) must be generated first.');
+        return;
+      }
+
+      const res = DigitalSignature.verifyDSA(msg, r, s, dsaP, dsaQ, dsaG, dsaY);
+      const badge = document.getElementById('dsaVerificationStatusBadge');
+      const traceBox = document.getElementById('dsaVerificationTraceBox');
+
+      if (res.verified) {
+        badge.className = 'sig-status-badge sig-status-valid';
+        badge.innerHTML = `&check; SIGNATURE VERIFIED: Authentic & Unmodified (v === r === ${res.v})`;
+        MainApp.showToast('DSA signature verified successfully.');
+      } else {
+        badge.className = 'sig-status-badge sig-status-invalid';
+        badge.innerHTML = `&cross; TAMPER DETECTED / INVALID SIGNATURE (v=${res.v} &ne; r=${res.r})`;
+        MainApp.showToast('Signature verification failed!');
+      }
+
+      if (res.details) {
+        traceBox.innerHTML = `
+          <div><strong>Digest H(m):</strong> ${res.hash}</div>
+          <div><code>${res.details.calcW}</code></div>
+          <div><code>${res.details.calcU1}</code></div>
+          <div><code>${res.details.calcU2}</code></div>
+          <div><code>${res.details.calcV}</code></div>
+          <div style="font-weight:700; margin-top:4px;">${res.details.comparison}</div>
+        `;
+      }
+    }
+
+    // ==========================================
+    // 2. MODERN WEB CRYPTO ECDSA
+    // ==========================================
+    let modernECDSAKeyPair = null;
+
+    async function generateModernECDSAKeypair() {
+      Validation.clearError('ecdsaAlertContainer');
+      try {
+        const res = await DigitalSignature.generateModernKeyPair();
+        modernECDSAKeyPair = res.keyPair;
+        document.getElementById('ecdsaPubKeyPem').value = res.publicKeyPem;
+        MainApp.showToast('New ECDSA P-256 keypair generated.');
+      } catch (e) {
+        Validation.showError('ecdsaAlertContainer', 'Failed to generate ECDSA keypair: ' + e.message);
+      }
+    }
+
+    async function runECDSASign() {
+      Validation.clearError('ecdsaAlertContainer');
+      if (!modernECDSAKeyPair) {
+        await generateModernECDSAKeypair();
+      }
+      const msg = document.getElementById('ecdsaMessageText').value;
+      if (!msg) {
+        Validation.showError('ecdsaAlertContainer', 'Please provide a message to sign.');
+        return;
+      }
+
+      try {
+        const res = await DigitalSignature.signModern(msg, modernECDSAKeyPair.privateKey);
+        document.getElementById('ecdsaSignatureHex').value = res.sigHex;
+        const badge = document.getElementById('ecdsaResultBadge');
+        badge.className = 'sig-status-badge sig-status-valid';
+        badge.innerHTML = `&check; ECDSA Signature Generated (${res.byteLength} bytes)`;
+        MainApp.showToast('ECDSA signature generated.');
+      } catch (e) {
+        Validation.showError('ecdsaAlertContainer', 'Signing failed: ' + e.message);
+      }
+    }
+
+    async function runECDSAVerify() {
+      Validation.clearError('ecdsaAlertContainer');
+      const msg = document.getElementById('ecdsaMessageText').value;
+      const sigHex = document.getElementById('ecdsaSignatureHex').value;
+      const badge = document.getElementById('ecdsaResultBadge');
+
+      if (!sigHex || !modernECDSAKeyPair) {
+        Validation.showError('ecdsaAlertContainer', 'Signature and active keypair are required.');
+        return;
+      }
+
+      const res = await DigitalSignature.verifyModern(msg, sigHex, modernECDSAKeyPair.publicKey);
+      if (res.success && res.isValid) {
+        badge.className = 'sig-status-badge sig-status-valid';
+        badge.innerHTML = `&check; ECDSA VERIFIED: Signature Authentic & Intact!`;
+        MainApp.showToast('ECDSA signature verified.');
+      } else {
+        badge.className = 'sig-status-badge sig-status-invalid';
+        badge.innerHTML = `&cross; ECDSA TAMPER DETECTED: Verification Failed!`;
+        MainApp.showToast('ECDSA verification rejected!');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      QuizEngine.renderQuiz('digital-signature', 'pretest', 'dssPretestContainer');
+      QuizEngine.renderQuiz('digital-signature', 'posttest', 'dssPosttestContainer');
+      runDSASign();
+      runDSAVerify();
+      await generateModernECDSAKeypair();
+      await runECDSASign();
+    });
+  </script>
+</body>
+</html>

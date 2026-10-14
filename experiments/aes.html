@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 04: Advanced Encryption Standard (AES) - Modern AES-GCM authenticated encryption and educational 4x4 state matrix round transformations.">
+  <title>Experiment 04: Advanced Encryption Standard (AES) - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">04. Advanced Encryption Standard (AES)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Header -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 04</span>
+          <span class="experiment-category-badge">Symmetric Encryption</span>
+        </div>
+        <h1 class="experiment-title">Advanced Encryption Standard (AES): Rijndael Transformations & AES-GCM</h1>
+        <p class="experiment-desc">
+          Master the global standard for symmetric encryption (FIPS PUB 197). Explore internal 4x4 state matrix transformations (SubBytes, ShiftRows, MixColumns, AddRoundKey) and execute modern AES-GCM authenticated encryption.
+        </p>
+      </div>
+
+      <!-- Active Standard Alert -->
+      <div class="alert alert-success mb-6">
+        <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+        </svg>
+        <div class="alert-content">
+          <strong>Current Global Standard:</strong> AES is the dominant symmetric encryption algorithm worldwide, securing TLS/HTTPS connections, wireless networks (WPA3), mobile storage, and governmental classified data.
+        </div>
+      </div>
+
+      <!-- 8-Tab Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To investigate the internal algebraic architecture and practical cryptographic deployment of the Advanced Encryption Standard (AES), examining the four round operations on a 4x4 byte state matrix and executing authenticated encryption using AES-GCM with dynamic nonces and tags.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Understand the 128-bit block size and key size variations (AES-128: 10 rounds, AES-192: 12 rounds, AES-256: 14 rounds).</li>
+            <li>Analyze the four transformations: SubBytes (S-box), ShiftRows (row permutation), MixColumns (multiplication in GF(2^8)), and AddRoundKey.</li>
+            <li>Implement practical Authenticated Encryption with Associated Data (AEAD) using native Web Crypto AES-GCM.</li>
+            <li>Observe how modifying a single byte in ciphertext or authentication tag triggers immediate cryptographic verification failure.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Principles of AES</h2>
+
+          <h3 class="mt-6 mb-3">1. Background & Specifications</h3>
+          <p>
+            Selected by NIST in 2001 after an open international competition, AES is based on the <strong>Rijndael</strong> cipher developed by Belgian cryptographers Vincent Rijmen and Joan Daemen. AES standardizes a fixed block size of <strong>128 bits (16 bytes)</strong>.
+          </p>
+          <div style="overflow-x: auto; margin: var(--space-4) 0;">
+            <table style="font-size: 0.875rem;">
+              <thead>
+                <tr>
+                  <th>Cipher Variant</th>
+                  <th>Key Length (bits)</th>
+                  <th>Key Length (words)</th>
+                  <th>Number of Rounds (Nr)</th>
+                  <th>Expanded Key Size (words)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>AES-128</strong></td>
+                  <td>128 bits (16 bytes)</td>
+                  <td>4 words</td>
+                  <td><strong>10 rounds</strong></td>
+                  <td>44 words</td>
+                </tr>
+                <tr>
+                  <td><strong>AES-192</strong></td>
+                  <td>192 bits (24 bytes)</td>
+                  <td>6 words</td>
+                  <td><strong>12 rounds</strong></td>
+                  <td>52 words</td>
+                </tr>
+                <tr>
+                  <td><strong>AES-256</strong></td>
+                  <td>256 bits (32 bytes)</td>
+                  <td>8 words</td>
+                  <td><strong>14 rounds</strong></td>
+                  <td>60 words</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. The 4x4 State Matrix & Four Round Operations</h3>
+          <p>
+            The 16 bytes of data are arranged into a 4x4 two-dimensional column-major state matrix:
+          </p>
+          <pre style="font-family: var(--font-mono); font-size: 0.85rem; background: var(--bg-surface-alt); padding: 10px; border-radius: 4px; border: 1px solid var(--border-color); width: fit-content;">
+[ S_0,0   S_0,1   S_0,2   S_0,3 ]
+[ S_1,0   S_1,1   S_1,2   S_1,3 ]
+[ S_2,0   S_2,1   S_2,2   S_2,3 ]
+[ S_3,0   S_3,1   S_3,2   S_3,3 ]</pre>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-4);">
+            <div style="padding: var(--space-3) var(--space-4); background: var(--bg-surface-alt); border-radius: var(--radius-md); border-left: 3px solid var(--primary-600);">
+              <strong>1. SubBytes (Non-linear Byte Substitution):</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">
+                Each byte in the state is independently replaced by its multiplicative inverse in the finite field <code>GF(2^8)</code> modulo <code>m(x) = x^8 + x^4 + x^3 + x + 1</code>, followed by an affine transformation. This provides strong resistance against differential and linear cryptanalysis.
+              </p>
+            </div>
+
+            <div style="padding: var(--space-3) var(--space-4); background: var(--bg-surface-alt); border-radius: var(--radius-md); border-left: 3px solid var(--cyan-600);">
+              <strong>2. ShiftRows (Cyclical Row Permutation):</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">
+                Row 0 is not shifted. Row 1 is cyclically shifted left by 1 byte. Row 2 is cyclically shifted left by 2 bytes. Row 3 is cyclically shifted left by 3 bytes. This achieves inter-column diffusion.
+              </p>
+            </div>
+
+            <div style="padding: var(--space-3) var(--space-4); background: var(--bg-surface-alt); border-radius: var(--radius-md); border-left: 3px solid #10b981;">
+              <strong>3. MixColumns (Galois Field Matrix Multiplication):</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">
+                Each column of four bytes is treated as a 4-term polynomial over <code>GF(2^8)</code> and multiplied modulo <code>x^4 + 1</code> with a fixed polynomial <code>c(x) = {03}x^3 + {01}x^2 + {01}x + {02}</code>. <em>(Omitted in the final round Nr)</em>.
+              </p>
+            </div>
+
+            <div style="padding: var(--space-3) var(--space-4); background: var(--bg-surface-alt); border-radius: var(--radius-md); border-left: 3px solid #7c3aed;">
+              <strong>4. AddRoundKey (XOR with Subkey):</strong>
+              <p style="font-size: 0.875rem; margin-top: 2px;">
+                The 128 bits of the state matrix are XORed with the corresponding 128-bit round subkey derived from the Key Expansion schedule.
+              </p>
+            </div>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>3. AES-GCM (Galois/Counter Mode) Authenticated Encryption</h3>
+          <p>
+            In modern production networks, AES is rarely used as a raw block cipher. Instead, it is paired with <strong>Galois/Counter Mode (GCM)</strong>, an AEAD scheme defined in NIST SP 800-38D.
+          </p>
+          <ul>
+            <li><strong>CTR Mode Confidentiality:</strong> Generates a keystream by encrypting sequential counter values initialized with a fresh 96-bit (12-byte) random nonce.</li>
+            <li><strong>GMAC Authentication Tag:</strong> Computes a 128-bit universal hash tag using polynomial arithmetic over the Galois field <code>GF(2^{128})</code>.</li>
+            <li><strong>Nonce Uniqueness Rule:</strong> An initialization vector (nonce) must <em>never</em> be reused with the same key. Reusing a nonce catastrophic allows an adversary to forge authentication tags and recover plaintext XOR differences.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>
+              <strong>Modern AES-GCM Tool:</strong>
+              <ul>
+                <li>Select key size: <strong>AES-128</strong> or <strong>AES-256</strong>.</li>
+                <li>Click <strong>Generate New Random Key</strong> (or enter a known hex key).</li>
+                <li>Enter your plaintext payload (e.g. <code>Top Secret University Research Payload</code>).</li>
+                <li>Click <strong>Encrypt (AES-GCM)</strong>. The Web Crypto API generates a fresh 96-bit nonce, encrypts the payload, and produces a 128-bit GMAC tag.</li>
+                <li>Click <strong>Decrypt (AES-GCM)</strong> to verify authenticated recovery.</li>
+                <li><strong>Tamper Detection Test:</strong> Modify one character in the Ciphertext or Tag field and click Decrypt. Observe the authentication failure alert.</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Educational State Matrix Visualizer:</strong>
+              <ul>
+                <li>Inspect the interactive 4x4 state matrix below.</li>
+                <li>Observe the sequential transformation of bytes through <code>SubBytes</code>, <code>ShiftRows</code>, and <code>MixColumns</code>.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="aesPretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>NIST FIPS 197 Standard Example</h2>
+          <p>Canonical AES-128 test vector (Round 1 state) from Appendix B of FIPS PUB 197:</p>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-6); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600); margin-top: var(--space-4);">
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
+              <div><strong>Plaintext Block:</strong> <code>00112233445566778899aabbccddeeff</code></div>
+              <div><strong>Cipher Key:</strong> <code>000102030405060708090a0b0c0d0e0f</code></div>
+              <div><strong>State after AddRoundKey(0):</strong> <code>00102030405060708090a0b0c0d0e0f0</code></div>
+              <div><strong>State after SubBytes:</strong> <code>63cab7040953d051cd60e0e7ba70e18c</code></div>
+              <div><strong>State after ShiftRows:</strong> <code>6353e08c0960e104cd70b751bacad0e7</code></div>
+              <div><strong>State after MixColumns:</strong> <code>baf078aa54759432f6a222fb721b1870</code></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE WORKSPACE)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+
+        <!-- Modern Web Crypto AES-GCM Section -->
+        <div class="card mb-8">
+          <div class="card-header">
+            <h3 class="card-title">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+              Modern Production Tool: Web Crypto AES-GCM (Authenticated Encryption)
+            </h3>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="setAESKeySize(128)" id="aesKey128Btn">AES-128</button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="setAESKeySize(256)" id="aesKey256Btn">AES-256</button>
+            </div>
+          </div>
+
+          <div id="aesAlertContainer"></div>
+
+          <div class="exp-workspace-grid" style="margin-bottom:0;">
+
+            <!-- Left Controls -->
+            <div>
+              <div class="form-group">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label" for="aesKeyHex" style="margin:0;">Active AES Key (Hex)</label>
+                  <button type="button" class="btn btn-outline-primary btn-sm" onclick="generateNewAESKey()">
+                    Generate New Key
+                  </button>
+                </div>
+                <input type="text" id="aesKeyHex" class="form-input form-mono" readonly>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aesPlaintext">Plaintext Payload</label>
+                <textarea id="aesPlaintext" class="form-textarea" rows="4">Principles of Cryptography: Verified AES-GCM Authenticated Transmission.</textarea>
+              </div>
+
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-primary" onclick="runAESGCMEncrypt()" style="flex:1;">
+                  Encrypt (AES-GCM)
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="runAESGCMDecrypt()" style="flex:1;">
+                  Decrypt (AES-GCM)
+                </button>
+              </div>
+
+              <div class="alert alert-info mt-4" style="font-size:0.8rem; margin-bottom:0;">
+                <div class="alert-content">
+                  <strong>AEAD Nonce & Tag:</strong> Every encryption automatically generates a cryptographically secure random 96-bit nonce via <code>crypto.getRandomValues</code>. Reusing a nonce with the same key is strictly prohibited.
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Results -->
+            <div>
+              <div class="form-group">
+                <label class="form-label" for="aesNonceHex">Random Nonce / IV (96 bits / 12 bytes Hex)</label>
+                <input type="text" id="aesNonceHex" class="form-input form-mono" readonly>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aesCipherHex">Ciphertext (Hexadecimal)</label>
+                <textarea id="aesCipherHex" class="form-textarea form-mono" rows="2"></textarea>
+                <span class="form-hint">Tip: Alter any character in this ciphertext to test tamper detection!</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aesTagHex">Authentication Tag (128 bits / 16 bytes GMAC Tag)</label>
+                <input type="text" id="aesTagHex" class="form-input form-mono">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="aesDecryptedText">Recovered Plaintext Output</label>
+                <input type="text" id="aesDecryptedText" class="form-input" readonly>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Educational 4x4 State Matrix Visualizer Section -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Educational Engine: 4x4 Rijndael State Matrix Transformations</h3>
+            <span class="badge badge-neutral">128-bit Block State</span>
+          </div>
+
+          <p class="text-muted" style="font-size:0.9rem; margin-bottom:var(--space-4);">
+            Enter a 16-character string or 32-character hexadecimal block to observe how the 4x4 byte state transforms through SubBytes, ShiftRows, and MixColumns in a single round.
+          </p>
+
+          <div class="d-flex gap-3 mb-6 flex-wrap align-items-center">
+            <input type="text" id="aesBlockInput" class="form-input form-mono" value="00112233445566778899aabbccddeeff" style="max-width:380px;">
+            <button type="button" class="btn btn-primary btn-sm" onclick="visualizeAESRound()">Update State Matrix</button>
+          </div>
+
+          <!-- 4 States in Grid -->
+          <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:var(--space-4); text-align:center;">
+            <div style="background:var(--bg-surface-alt); padding:var(--space-4); border-radius:var(--radius-md); border:1px solid var(--border-color);">
+              <h5 style="margin-bottom:var(--space-2); color:var(--text-main);">1. Initial State</h5>
+              <div class="aes-state-grid" id="aesGridInitial" style="margin:0 auto;"></div>
+            </div>
+
+            <div style="background:var(--bg-surface-alt); padding:var(--space-4); border-radius:var(--radius-md); border:1px solid var(--border-color);">
+              <h5 style="margin-bottom:var(--space-2); color:var(--primary-700);">2. SubBytes</h5>
+              <div class="aes-state-grid" id="aesGridSubBytes" style="margin:0 auto;"></div>
+            </div>
+
+            <div style="background:var(--bg-surface-alt); padding:var(--space-4); border-radius:var(--radius-md); border:1px solid var(--border-color);">
+              <h5 style="margin-bottom:var(--space-2); color:var(--cyan-700);">3. ShiftRows</h5>
+              <div class="aes-state-grid" id="aesGridShiftRows" style="margin:0 auto;"></div>
+            </div>
+
+            <div style="background:var(--bg-surface-alt); padding:var(--space-4); border-radius:var(--radius-md); border:1px solid var(--border-color);">
+              <h5 style="margin-bottom:var(--space-2); color:#059669;">4. MixColumns</h5>
+              <div class="aes-state-grid" id="aesGridMixColumns" style="margin:0 auto;"></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="aesPosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>NIST.</strong> <em>Advanced Encryption Standard (AES)</em>, Federal Information Processing Standards Publication 197 (FIPS PUB 197). National Institute of Standards and Technology, 2001.
+            </li>
+            <li>
+              <strong>NIST Special Publication 800-38D.</strong> <em>Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC</em>. NIST, 2007.
+            </li>
+            <li>
+              <strong>Joan Daemen and Vincent Rijmen.</strong> <em>The Design of Rijndael: AES - The Advanced Encryption Standard</em>. Springer-Verlag, 2002.
+            </li>
+            <li>
+              <strong>W3C.</strong> <em>Web Cryptography API - W3C Recommendation</em>. World Wide Web Consortium, 2017.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Pagination Footer -->
+      <div class="exp-pagination-nav">
+        <a href="des.html" class="exp-nav-btn">
+          ← Previous: 03. DES Algorithm
+        </a>
+        <a href="rsa.html" class="exp-nav-btn">
+          Next: 05. RSA Encryption →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+            <li><a href="rsa.html">05. RSA Cryptography</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197</a></li>
+            <li><a href="https://csrc.nist.gov/publications/detail/sp/800-38d/final" target="_blank" rel="noopener">NIST SP 800-38D</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/aes.js"></script>
+
+  <script>
+    let activeKeySize = 256;
+    let activeCryptoKey = null;
+
+    async function setAESKeySize(size) {
+      activeKeySize = size;
+      document.getElementById('aesKey128Btn').className = size === 128 ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+      document.getElementById('aesKey256Btn').className = size === 256 ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+      await generateNewAESKey();
+    }
+
+    async function generateNewAESKey() {
+      Validation.clearError('aesAlertContainer');
+      try {
+        activeCryptoKey = await AESHelper.generateKey(activeKeySize);
+        const hex = await AESHelper.exportKeyHex(activeCryptoKey);
+        document.getElementById('aesKeyHex').value = hex;
+        MainApp.showToast(`New ${activeKeySize}-bit AES key generated.`);
+      } catch (e) {
+        Validation.showError('aesAlertContainer', 'Failed to generate AES key via Web Crypto API.');
+      }
+    }
+
+    async function runAESGCMEncrypt() {
+      Validation.clearError('aesAlertContainer');
+      const text = document.getElementById('aesPlaintext').value;
+      if (!text) {
+        Validation.showError('aesAlertContainer', 'Please provide plaintext to encrypt.');
+        return;
+      }
+      if (!activeCryptoKey) {
+        await generateNewAESKey();
+      }
+
+      try {
+        const res = await AESHelper.encryptGCM(text, activeCryptoKey);
+        document.getElementById('aesNonceHex').value = res.ivHex;
+        document.getElementById('aesCipherHex').value = res.cipherHex;
+        document.getElementById('aesTagHex').value = res.tagHex;
+        document.getElementById('aesDecryptedText').value = '';
+        MainApp.showToast('AES-GCM encryption & authentication tag generated.');
+      } catch (err) {
+        Validation.showError('aesAlertContainer', 'Encryption error: ' + err.message);
+      }
+    }
+
+    async function runAESGCMDecrypt() {
+      Validation.clearError('aesAlertContainer');
+      const cipherHex = document.getElementById('aesCipherHex').value;
+      const ivHex = document.getElementById('aesNonceHex').value;
+      const tagHex = document.getElementById('aesTagHex').value;
+
+      if (!cipherHex || !ivHex || !tagHex) {
+        Validation.showError('aesAlertContainer', 'Ciphertext, Nonce, and Authentication Tag are all required for authenticated decryption.');
+        return;
+      }
+
+      const res = await AESHelper.decryptGCM(cipherHex, ivHex, tagHex, activeCryptoKey);
+      if (res.success) {
+        document.getElementById('aesDecryptedText').value = res.plaintext;
+        MainApp.showToast('AES-GCM authentication verified: Message recovered!');
+      } else {
+        Validation.showError('aesAlertContainer', res.error);
+        document.getElementById('aesDecryptedText').value = '[TAMPER DETECTED / DECRYPTION FAILED]';
+      }
+    }
+
+    // 4x4 State Visualizer
+    function renderGridState(containerId, state) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const hexArr = AESHelper.formatStateHex(state);
+      let html = '';
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+          html += `<div class="aes-byte-cell">${hexArr[r][c]}</div>`;
+        }
+      }
+      el.innerHTML = html;
+    }
+
+    function visualizeAESRound() {
+      const input = document.getElementById('aesBlockInput').value;
+      const isHex = /^[0-9A-Fa-f]{32}$/.test(input.replace(/[^0-9A-Fa-f]/g, ''));
+
+      const s0 = AESHelper.createStateMatrix(input, isHex);
+      renderGridState('aesGridInitial', s0);
+
+      const s1 = AESHelper.subBytes(s0);
+      renderGridState('aesGridSubBytes', s1);
+
+      const s2 = AESHelper.shiftRows(s1);
+      renderGridState('aesGridShiftRows', s2);
+
+      const s3 = AESHelper.mixColumns(s2);
+      renderGridState('aesGridMixColumns', s3);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      QuizEngine.renderQuiz('aes', 'pretest', 'aesPretestContainer');
+      QuizEngine.renderQuiz('aes', 'posttest', 'aesPosttestContainer');
+      await generateNewAESKey();
+      await runAESGCMEncrypt();
+      visualizeAESRound();
+    });
+  </script>
+</body>
+</html>

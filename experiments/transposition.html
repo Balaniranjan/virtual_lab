@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 02: Transposition Techniques - Rail Fence Row-Major (Zigzag) and Column-Major (Rectangular Grid) interactive simulations, theory, and assessments.">
+  <title>Experiment 02: Transposition Techniques - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">02. Transposition Techniques</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Header -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 02</span>
+          <span class="experiment-category-badge">Classical Cryptography</span>
+        </div>
+        <h1 class="experiment-title">Transposition Techniques: Row-Major and Column-Major Rail Fence Ciphers</h1>
+        <p class="experiment-desc">
+          Analyze permutation-based cryptography by comparing the diagonal zigzag wave traversal of Row-Major Rail Fence with the rectangular grid permutation of Column-Major Transposition.
+        </p>
+      </div>
+
+      <!-- Legacy Alert -->
+      <div class="legacy-warning-alert">
+        <span class="legacy-warning-badge">Educational Legacy Primitive</span>
+        <div>
+          <strong>Cryptographic Notice:</strong> Transposition ciphers preserve 100% of natural language letter frequencies. They are easily cracked using anagramming and bigram reconstruction, and serve here strictly to teach the concept of diffusion.
+        </div>
+      </div>
+
+      <!-- 8-Tab Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To explore the principles of permutation-based encryption by modeling, simulating, and analyzing the character placement grids, reading sequences, and inverse reconstruction mechanics of Row-Major (Zigzag) and Column-Major (Rectangular Grid) Transposition Ciphers.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Understand the distinction between substitution (confusion) and transposition (diffusion).</li>
+            <li>Trace the diagonal wave pattern of a zigzag rail fence across arbitrary rail counts (R &ge; 2).</li>
+            <li>Execute the rectangular grid convention of Column-Major transposition and handle incomplete columns.</li>
+            <li>Verify that letter frequency distributions remain invariant under pure transposition.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Principles of Transposition</h2>
+
+          <h3 class="mt-6 mb-3">1. Transposition vs. Substitution</h3>
+          <p>
+            Unlike substitution ciphers where characters change their identities, transposition ciphers rearrange the order or positional coordinates of the plaintext characters according to a regular geometric or permutation system.
+          </p>
+          <p>
+            In Shannon's terminology, substitution introduces <strong>Confusion</strong> (obscuring the link between the key and the ciphertext), while transposition introduces <strong>Diffusion</strong> (spreading statistical redundancies of the plaintext over wide spans of ciphertext).
+          </p>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. Rail Fence: Row-Major (Zigzag Wave Convention)</h3>
+          <p>
+            In the classical Row-Major rail fence cipher, characters are written along an alternating diagonal wave across <code>R</code> parallel horizontal rails:
+          </p>
+          <div class="visualizer-container">
+            <p><strong>Path Mechanics:</strong></p>
+            <p>
+              Starting at rail 0, characters advance diagonally downward to rail <code>R - 1</code>, then reverse direction and advance diagonally upward to rail 0, repeating cyclically with period <code>T = 2(R - 1)</code>.
+            </p>
+            <p><strong>Ciphertext Generation:</strong></p>
+            <p>
+              Once the plaintext is written along the zigzag path, the ciphertext is generated by reading out each rail horizontally from left to right, beginning at rail 0 and ending at rail <code>R - 1</code>.
+            </p>
+            <p><strong>Decryption:</strong></p>
+            <p>
+              To invert the transformation, the receiver marks the empty zigzag slots for a message of length <code>L</code>, fills the marked slots row-by-row with ciphertext characters, and finally reads the grid along the original zigzag wave path.
+            </p>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>3. Rail Fence: Column-Major (Rectangular Grid Convention)</h3>
+          <p>
+            To avoid confusion between different historical conventions, our laboratory establishes an explicit, documented <strong>Column-Major Grid Convention</strong>:
+          </p>
+          <div class="visualizer-container">
+            <p><strong>Grid Layout Convention:</strong></p>
+            <ol style="margin-left: var(--space-4);">
+              <li>Plaintext is written horizontally row-by-row into a rectangular matrix having <code>C</code> columns (where <code>C = number of rails/columns</code>).</li>
+              <li>The required number of rows is <code>rows = ceil(Length / C)</code>.</li>
+              <li>Ciphertext is produced by reading the matrix vertically, column-by-column, starting from column 0 through column <code>C - 1</code>.</li>
+            </ol>
+            <p><strong>Handling Incomplete Columns during Decryption:</strong></p>
+            <p>
+              If the message length <code>L</code> is not a multiple of <code>C</code>, the remainder <code>r = L mod C</code> indicates that the first <code>r</code> columns have length <code>rows</code>, while the remaining columns have length <code>rows - 1</code>. The decryption algorithm accurately reconstructs these variable column lengths before reading out the grid row-by-row.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>Select the desired transposition mode: <strong>Row-Major (Zigzag)</strong> or <strong>Column-Major (Grid)</strong>.</li>
+            <li>Enter your plaintext message in the input text area.</li>
+            <li>Select or input the number of rails / columns (minimum 2).</li>
+            <li>Click <strong>Encrypt</strong> to visualize character placement across the generated grid.</li>
+            <li>Observe how row concatenations (Row-Major) or column reads (Column-Major) produce the final ciphertext.</li>
+            <li>Click <strong>Decrypt</strong> to observe inverse grid reconstruction and message recovery.</li>
+            <li>Take the <strong>Posttest</strong> to confirm mastery of transposition ciphers.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="transpositionPretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>Canonical Demonstration Examples</h2>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-6); margin-top: var(--space-4);">
+
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600);">
+              <h4>Example 1: Row-Major Zigzag Rail Fence (3 Rails)</h4>
+              <p style="font-size: 0.9rem;"><strong>Plaintext:</strong> <code>DEFEND THE EAST WALL</code> (length 20)</p>
+              <p style="font-size: 0.9rem;"><strong>Number of Rails:</strong> <code>R = 3</code></p>
+              <pre style="font-family: var(--font-mono); font-size: 0.85rem; background: #ffffff; padding: 10px; border-radius: 4px; border: 1px solid var(--border-color); overflow-x: auto;">
+Rail 0: D . . . N . . . E . . . T . . . L . .
+Rail 1: . E . E . D . H . E . S . W . L . . .
+Rail 2: . . F . . . T . . . A . . . A . . . .</pre>
+              <p style="font-size: 0.9rem; margin-top: 6px;">
+                <strong>Reading rows:</strong>
+                <br>Rail 0: <code>DNETL</code>
+                <br>Rail 1: <code>EEDHESWL</code>
+                <br>Rail 2: <code>FTAA</code>
+              </p>
+              <p style="font-size: 0.9rem; color: var(--primary-700);"><strong>Ciphertext:</strong> <code>DNETLEEDHESWLFTAA</code></p>
+            </div>
+
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-5); border-radius: var(--radius-md); border-left: 4px solid var(--cyan-600);">
+              <h4>Example 2: Column-Major Rectangular Grid Transposition (4 Columns)</h4>
+              <p style="font-size: 0.9rem;"><strong>Plaintext:</strong> <code>CRYPTOGRAPHY</code> (length 12)</p>
+              <p style="font-size: 0.9rem;"><strong>Columns:</strong> <code>C = 4</code> (Rows = 12 / 4 = 3)</p>
+              <pre style="font-family: var(--font-mono); font-size: 0.85rem; background: #ffffff; padding: 10px; border-radius: 4px; border: 1px solid var(--border-color); overflow-x: auto;">
+Row 0: C  R  Y  P
+Row 1: T  O  G  R
+Row 2: A  P  H  Y</pre>
+              <p style="font-size: 0.9rem; margin-top: 6px;">
+                <strong>Reading columns:</strong>
+                <br>Col 0: <code>CTA</code>
+                <br>Col 1: <code>ROP</code>
+                <br>Col 2: <code>YGH</code>
+                <br>Col 3: <code>PRY</code>
+              </p>
+              <p style="font-size: 0.9rem; color: var(--cyan-700);"><strong>Ciphertext:</strong> <code>CTA ROP YGH PRY</code> -> <code>CTAROPYGHPRY</code></p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE WORKSPACE)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+        <div class="sub-exp-wrapper">
+
+          <div class="sub-exp-selector">
+            <button type="button" class="sub-exp-btn active" data-sub="rf-row">Rail Fence: Row-Major (Zigzag)</button>
+            <button type="button" class="sub-exp-btn" data-sub="rf-col">Rail Fence: Column-Major (Grid)</button>
+          </div>
+
+          <!-- SUB-MODULE A: ROW-MAJOR ZIGZAG -->
+          <div class="sub-exp-panel active" id="sub-rf-row">
+            <div class="exp-workspace-grid">
+
+              <!-- Left Panel -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Row-Major (Zigzag) Controls</h3>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="resetRowMajor()">Reset</button>
+                </div>
+
+                <div id="rfRowAlertContainer"></div>
+
+                <div class="form-group">
+                  <label class="form-label" for="rfRowInput">Plaintext or Ciphertext</label>
+                  <textarea id="rfRowInput" class="form-textarea form-mono" rows="3">DEFEND THE EAST WALL</textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="rfRowRails">Number of Rails: <span id="rfRowRailsLabel" style="color:var(--primary-600); font-weight:700;">3</span></label>
+                  <div class="d-flex align-items-center gap-3">
+                    <input type="range" id="rfRowRailsRange" min="2" max="8" value="3" style="flex:1;" oninput="updateRowMajorRails(this.value)">
+                    <input type="number" id="rfRowRailsNumber" min="2" max="8" value="3" class="form-input" style="width:75px;" oninput="updateRowMajorRails(this.value)">
+                  </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                  <button type="button" class="btn btn-primary" onclick="runRowMajorEncrypt()" style="flex:1;">
+                    Encrypt
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="runRowMajorDecrypt()" style="flex:1;">
+                    Decrypt
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right Panel -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Zigzag Grid & Output</h3>
+                  <button type="button" class="copy-btn" onclick="MainApp.copyToClipboard('rfRowOutput')">Copy Output</button>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="rfRowOutput">Result Output</label>
+                  <input type="text" id="rfRowOutput" class="form-input form-mono" readonly>
+                </div>
+
+                <!-- Grid Visualizer -->
+                <div class="visualizer-container">
+                  <div class="visualizer-title">Zigzag Wave Matrix</div>
+                  <div class="rail-grid-container" id="rfRowGridContainer">
+                    <p class="text-muted text-center" style="margin: var(--space-4) 0;">Execute encryption or decryption to generate wave grid</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SUB-MODULE B: COLUMN-MAJOR GRID -->
+          <div class="sub-exp-panel" id="sub-rf-col">
+            <div class="exp-workspace-grid">
+
+              <!-- Left Panel -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Column-Major (Grid) Controls</h3>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="resetColMajor()">Reset</button>
+                </div>
+
+                <div id="rfColAlertContainer"></div>
+
+                <div class="form-group">
+                  <label class="form-label" for="rfColInput">Plaintext or Ciphertext</label>
+                  <textarea id="rfColInput" class="form-textarea form-mono" rows="3">CRYPTOGRAPHY</textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="rfColCount">Number of Columns: <span id="rfColCountLabel" style="color:var(--cyan-700); font-weight:700;">4</span></label>
+                  <div class="d-flex align-items-center gap-3">
+                    <input type="range" id="rfColRange" min="2" max="8" value="4" style="flex:1;" oninput="updateColMajorCols(this.value)">
+                    <input type="number" id="rfColNumber" min="2" max="8" value="4" class="form-input" style="width:75px;" oninput="updateColMajorCols(this.value)">
+                  </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                  <button type="button" class="btn btn-primary" onclick="runColMajorEncrypt()" style="flex:1;">
+                    Encrypt
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="runColMajorDecrypt()" style="flex:1;">
+                    Decrypt
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right Panel -->
+              <div class="exp-panel">
+                <div class="exp-panel-header">
+                  <h3 class="exp-panel-title">Rectangular Grid Output</h3>
+                  <button type="button" class="copy-btn" onclick="MainApp.copyToClipboard('rfColOutput')">Copy Output</button>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="rfColOutput">Result Output</label>
+                  <input type="text" id="rfColOutput" class="form-input form-mono" readonly>
+                </div>
+
+                <div class="visualizer-container">
+                  <div class="visualizer-title">Rectangular Grid Table (Written Row-Wise, Read Column-Wise)</div>
+                  <div id="rfColGridContainer" style="overflow-x: auto;">
+                    <p class="text-muted text-center" style="margin: var(--space-4) 0;">Awaiting execution...</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="transpositionPosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>William Stallings.</strong> <em>Cryptography and Network Security: Principles and Practice</em>, Chapter 2: Transposition Techniques. Pearson, 2020.
+            </li>
+            <li>
+              <strong>Claude E. Shannon.</strong> "Communication Theory of Secrecy Systems." <em>Bell System Technical Journal</em>, Vol. 28, No. 4 (1949), pp. 656–715.
+            </li>
+            <li>
+              <strong>Bruce Schneier.</strong> <em>Applied Cryptography: Protocols, Algorithms, and Source Code in C</em> (2nd Edition). John Wiley & Sons, 1996.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Pagination Footer -->
+      <div class="exp-pagination-nav">
+        <a href="classical-ciphers.html" class="exp-nav-btn">
+          ← Previous: 01. Classical Ciphers
+        </a>
+        <a href="des.html" class="exp-nav-btn">
+          Next: 03. DES Algorithm →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/rail-fence.js"></script>
+
+  <script>
+    // ==========================================
+    // ROW-MAJOR (ZIGZAG) CONTROLS
+    // ==========================================
+    function updateRowMajorRails(val) {
+      val = parseInt(val, 10) || 3;
+      val = Math.max(2, Math.min(8, val));
+      document.getElementById('rfRowRailsRange').value = val;
+      document.getElementById('rfRowRailsNumber').value = val;
+      document.getElementById('rfRowRailsLabel').textContent = val;
+    }
+
+    function runRowMajorEncrypt() {
+      Validation.clearError('rfRowAlertContainer');
+      const text = document.getElementById('rfRowInput').value;
+      const rails = document.getElementById('rfRowRailsNumber').value;
+
+      if (!text.trim()) {
+        Validation.showError('rfRowAlertContainer', 'Please enter a message to encrypt.');
+        return;
+      }
+
+      const res = RailFenceCipher.encryptRowMajor(text, rails);
+      document.getElementById('rfRowOutput').value = res.result;
+      renderZigzagGrid(res.grid, rails, text.length);
+      MainApp.showToast('Row-Major rail fence encryption completed.');
+    }
+
+    function runRowMajorDecrypt() {
+      Validation.clearError('rfRowAlertContainer');
+      const text = document.getElementById('rfRowInput').value;
+      const rails = document.getElementById('rfRowRailsNumber').value;
+
+      if (!text.trim()) {
+        Validation.showError('rfRowAlertContainer', 'Please enter ciphertext to decrypt.');
+        return;
+      }
+
+      const res = RailFenceCipher.decryptRowMajor(text, rails);
+      document.getElementById('rfRowOutput').value = res.result;
+      renderZigzagGrid(res.grid, rails, text.length);
+      MainApp.showToast('Row-Major rail fence decryption completed.');
+    }
+
+    function renderZigzagGrid(grid, rails, len) {
+      const container = document.getElementById('rfRowGridContainer');
+      if (!container) return;
+
+      let html = '<div class="rail-grid">';
+      for (let r = 0; r < rails; r++) {
+        html += `<div class="rail-row"><div class="rail-header-cell">Rail ${r}</div>`;
+        for (let c = 0; c < len; c++) {
+          const char = grid[r][c];
+          if (char !== null) {
+            html += `<div class="rail-char-cell rail-char-active">${char}</div>`;
+          } else {
+            html += `<div class="rail-char-cell rail-char-empty">·</div>`;
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function resetRowMajor() {
+      document.getElementById('rfRowInput').value = 'DEFEND THE EAST WALL';
+      document.getElementById('rfRowOutput').value = '';
+      updateRowMajorRails(3);
+      Validation.clearError('rfRowAlertContainer');
+      const container = document.getElementById('rfRowGridContainer');
+      if (container) container.innerHTML = '<p class="text-muted text-center" style="margin: var(--space-4) 0;">Execute encryption or decryption to generate wave grid</p>';
+    }
+
+    // ==========================================
+    // COLUMN-MAJOR (GRID) CONTROLS
+    // ==========================================
+    function updateColMajorCols(val) {
+      val = parseInt(val, 10) || 4;
+      val = Math.max(2, Math.min(8, val));
+      document.getElementById('rfColRange').value = val;
+      document.getElementById('rfColNumber').value = val;
+      document.getElementById('rfColCountLabel').textContent = val;
+    }
+
+    function runColMajorEncrypt() {
+      Validation.clearError('rfColAlertContainer');
+      const text = document.getElementById('rfColInput').value;
+      const cols = document.getElementById('rfColNumber').value;
+
+      if (!text.trim()) {
+        Validation.showError('rfColAlertContainer', 'Please enter a message to encrypt.');
+        return;
+      }
+
+      const res = RailFenceCipher.encryptColumnMajor(text, cols);
+      document.getElementById('rfColOutput').value = res.result;
+      renderColMajorGrid(res.grid, res.cols, res.rows);
+      MainApp.showToast('Column-Major grid encryption completed.');
+    }
+
+    function runColMajorDecrypt() {
+      Validation.clearError('rfColAlertContainer');
+      const text = document.getElementById('rfColInput').value;
+      const cols = document.getElementById('rfColNumber').value;
+
+      if (!text.trim()) {
+        Validation.showError('rfColAlertContainer', 'Please enter ciphertext to decrypt.');
+        return;
+      }
+
+      const res = RailFenceCipher.decryptColumnMajor(text, cols);
+      document.getElementById('rfColOutput').value = res.result;
+      renderColMajorGrid(res.grid, res.cols, res.rows);
+      MainApp.showToast('Column-Major grid decryption completed.');
+    }
+
+    function renderColMajorGrid(grid, cols, rows) {
+      const container = document.getElementById('rfColGridContainer');
+      if (!container) return;
+
+      let html = '<table class="char-step-table" style="text-align:center;"><thead><tr><th>Row</th>';
+      for (let c = 0; c < cols; c++) {
+        html += `<th>Col ${c}</th>`;
+      }
+      html += '</tr></thead><tbody>';
+
+      for (let r = 0; r < rows; r++) {
+        html += `<tr><td><strong>Row ${r}</strong></td>`;
+        for (let c = 0; c < cols; c++) {
+          const char = grid[r][c];
+          html += `<td>${char !== null ? `<strong>${char}</strong>` : '<span style="color:#cbd5e1;">&empty;</span>'}</td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function resetColMajor() {
+      document.getElementById('rfColInput').value = 'CRYPTOGRAPHY';
+      document.getElementById('rfColOutput').value = '';
+      updateColMajorCols(4);
+      Validation.clearError('rfColAlertContainer');
+      const container = document.getElementById('rfColGridContainer');
+      if (container) container.innerHTML = '<p class="text-muted text-center" style="margin: var(--space-4) 0;">Awaiting execution...</p>';
+    }
+
+    // Initialize Quizzes on Load
+    document.addEventListener('DOMContentLoaded', () => {
+      QuizEngine.renderQuiz('transposition', 'pretest', 'transpositionPretestContainer');
+      QuizEngine.renderQuiz('transposition', 'posttest', 'transpositionPosttestContainer');
+      runRowMajorEncrypt();
+      runColMajorEncrypt();
+    });
+  </script>
+</body>
+</html>

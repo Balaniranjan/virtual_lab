@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 06: Diffie-Hellman Key Exchange - Interactive Alice, Bob, and Eve simulation, public-parameter negotiation, discrete logarithms, and MitM attack analysis.">
+  <title>Experiment 06: Diffie–Hellman Key Exchange - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">06. Diffie–Hellman Key Exchange</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Header -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 06</span>
+          <span class="experiment-category-badge">Asymmetric Cryptography</span>
+        </div>
+        <h1 class="experiment-title">Diffie–Hellman Key Exchange: Two-Party Protocol & MitM Vulnerability</h1>
+        <p class="experiment-desc">
+          Simulate how two communicating parties (Alice and Bob) negotiate a shared symmetric key over an insecure communication channel, and analyze why unauthenticated key exchange is vulnerable to active Man-in-the-Middle attacks.
+        </p>
+      </div>
+
+      <!-- Protocol Notice -->
+      <div class="alert alert-info mb-6">
+        <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div class="alert-content">
+          <strong>Key Establishment Foundation:</strong> Diffie-Hellman allows two parties who share no prior secret to establish a shared symmetric key. In modern Internet security, Ephemeral Diffie-Hellman (ECDHE) forms the cryptographic backbone of TLS 1.3 forward secrecy.
+        </div>
+      </div>
+
+      <!-- 8-Tab Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To simulate and evaluate the Diffie–Hellman Key Exchange protocol between Alice and Bob, calculating public exchange parameters and matching shared secrets, while analyzing the security vulnerabilities of unauthenticated communication against Man-in-the-Middle (MitM) adversaries.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Understand the Discrete Logarithm Problem (DLP) in finite cyclic groups.</li>
+            <li>Trace the step-by-step key exchange: public values A = g^a mod p and B = g^b mod p.</li>
+            <li>Demonstrate that both parties arrive at the identical shared secret key: K = g^(ab) mod p.</li>
+            <li>Simulate an active Eve intercepting parameters to understand why digital signatures or PKI are mandatory for authenticating Diffie-Hellman exchanges.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Principles of Diffie-Hellman</h2>
+
+          <h3 class="mt-6 mb-3">1. The Discrete Logarithm Problem (DLP)</h3>
+          <p>
+            The security of finite-field Diffie-Hellman relies on the asymmetric computational complexity of modular exponentiation versus discrete logarithms:
+          </p>
+          <div class="visualizer-container">
+            <p><strong>Forward Operation (Easy):</strong> Given base <code>g</code>, exponent <code>x</code>, and modulus <code>p</code>, computing <code>y = g^x \bmod p</code> takes polynomial time <code>O(\log x)</code> using square-and-multiply.</p>
+            <p><strong>Inverse Operation (Intractable):</strong> Given only <code>g</code>, <code>y</code>, and prime <code>p</code>, computing the exponent <code>x = \log_g(y) \bmod p</code> is computationally infeasible for sufficiently large primes (e.g. 2048+ bits).</p>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. Protocol Execution Steps</h3>
+          <ol style="margin-left: var(--space-4); line-height: 1.8;">
+            <li><strong>Public Parameter Setup:</strong> Alice and Bob publicly agree on a large prime modulus <code>p</code> and a primitive generator <code>g</code> of the cyclic multiplicative group <code>Z_p^*</code>.</li>
+            <li><strong>Private Key Selection:</strong>
+              <ul>
+                <li>Alice selects a random private integer <code>a</code> such that <code>1 &le; a &lt; p</code>.</li>
+                <li>Bob selects a random private integer <code>b</code> such that <code>1 &le; b &lt; p</code>.</li>
+              </ul>
+            </li>
+            <li><strong>Public Key Calculation & Exchange:</strong>
+              <ul>
+                <li>Alice computes public value <code>A = g^a \bmod p</code> and sends <code>A</code> across the network to Bob.</li>
+                <li>Bob computes public value <code>B = g^b \bmod p</code> and sends <code>B</code> across the network to Alice.</li>
+              </ul>
+            </li>
+            <li><strong>Shared Secret Derivation:</strong>
+              <ul>
+                <li>Alice computes: <code>K_A = B^a \bmod p = (g^b)^a \bmod p = g^{ab} \bmod p</code>.</li>
+                <li>Bob computes: <code>K_B = A^b \bmod p = (g^a)^b \bmod p = g^{ab} \bmod p</code>.</li>
+                <li>Since <code>g^{ab} \equiv g^{ba} \pmod{p}</code>, both parties compute the identical secret key: <code>K_A = K_B = K</code>.</li>
+              </ul>
+            </li>
+          </ol>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>3. Man-in-the-Middle (MitM) Vulnerability</h3>
+          <p>
+            Basic Diffie-Hellman is <strong>unauthenticated</strong>. It establishes a shared secret with whoever is on the other end of the wire, but cannot prove who that party is.
+          </p>
+          <p>
+            If an active attacker (Eve) intercepts traffic on the channel:
+          </p>
+          <ul>
+            <li>Eve intercepts Alice's public value <code>A</code> and substitutes her own value <code>E_A = g^e \bmod p</code> to Bob.</li>
+            <li>Eve intercepts Bob's public value <code>B</code> and substitutes her own value <code>E_B = g^e \bmod p</code> to Alice.</li>
+            <li>Alice establishes a shared secret with Eve (<code>K_{AE}</code>); Bob establishes a separate shared secret with Eve (<code>K_{EB}</code>).</li>
+            <li>Eve transparently decrypts, reads, alters, and re-encrypts all communications without Alice or Bob knowing!</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>Review the public domain parameters: prime modulus <code>p</code> and generator <code>g</code>.</li>
+            <li>Enter Alice's private secret <code>a</code> and Bob's private secret <code>b</code> (or use preset values).</li>
+            <li>Click <strong>Execute Key Exchange Protocol</strong>.</li>
+            <li>Inspect the animated exchange diagram: observe Alice transmitting <code>A</code>, Bob transmitting <code>B</code>, and both computing <code>K_A</code> and <code>K_B</code>.</li>
+            <li>Verify that the shared secret agreement banner displays <strong>Shared Secrets Match: Valid Key Agreement</strong>.</li>
+            <li>Toggle <strong>Simulate Active Man-in-the-Middle (Eve) Attack</strong> to observe how Eve splits the key exchange into two compromised sessions.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="dhPretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>Canonical Classroom Demonstration</h2>
+          <p>Standard textbook exchange using classroom parameters p=23 and g=5:</p>
+
+          <div style="background-color: var(--bg-surface-alt); padding: var(--space-6); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600); margin-top: var(--space-4);">
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
+              <div><strong>Public Parameters:</strong> <code>p = 23, g = 5</code> (5 is a primitive root of 23)</div>
+              <div><strong>Alice's Private Key:</strong> <code>a = 6</code></div>
+              <div><strong>Alice Computes Public Key A:</strong> <code>A = 5^6 mod 23 = 15625 mod 23 = 8</code></div>
+              <div><strong>Bob's Private Key:</strong> <code>b = 15</code></div>
+              <div><strong>Bob Computes Public Key B:</strong> <code>B = 5^15 mod 23 = 19</code></div>
+              <div style="border-top:1px dashed var(--border-color); padding-top:6px;"><strong>Network Transmission:</strong> Alice sends A=8 to Bob; Bob sends B=19 to Alice.</div>
+              <div><strong>Alice Derives Secret:</strong> <code>K_A = B^a mod p = 19^6 mod 23 = 47045881 mod 23 = 2</code></div>
+              <div><strong>Bob Derives Secret:</strong> <code>K_B = A^b mod p = 8^15 mod 23 = 35184372088832 mod 23 = 2</code></div>
+              <div style="color:#059669; font-weight:700;">&check; Shared Secret Agreement: K_A === K_B === 2</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE WORKSPACE)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+        <div class="card mb-8">
+          <div class="card-header">
+            <h3 class="card-title">Alice and Bob Two-Party Simulation</h3>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="loadDHPreset(23, 5, 6, 15)">Small (p=23)</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="loadDHPreset(353, 3, 97, 233)">Medium (p=353)</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="loadDHPreset(1019, 2, 451, 829)">FIPS (p=1019)</button>
+            </div>
+          </div>
+
+          <div id="dhAlertContainer"></div>
+
+          <!-- Parameter Input Bar -->
+          <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:var(--space-4); margin-bottom:var(--space-6);">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" for="dhPrimeP">Prime Modulus (p)</label>
+              <input type="number" id="dhPrimeP" class="form-input form-mono" value="23">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" for="dhGenG">Generator Base (g)</label>
+              <input type="number" id="dhGenG" class="form-input form-mono" value="5">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" for="dhPrivA">Alice's Secret (a)</label>
+              <input type="number" id="dhPrivA" class="form-input form-mono" value="6">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label" for="dhPrivB">Bob's Secret (b)</label>
+              <input type="number" id="dhPrivB" class="form-input form-mono" value="15">
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-6">
+            <button type="button" class="btn btn-primary" onclick="runDiffieHellman()">
+              Execute Key Exchange Protocol
+            </button>
+            <label class="d-flex align-items-center gap-2" style="cursor:pointer; font-weight:600; color:#dc2626;">
+              <input type="checkbox" id="dhMitmToggle" onchange="runDiffieHellman()">
+              <span>Simulate Active Man-in-the-Middle (Eve Interception)</span>
+            </label>
+          </div>
+
+          <!-- Interactive Exchange Diagram -->
+          <div class="dh-exchange-container">
+            <div class="dh-actors-row">
+
+              <!-- Alice Actor Column -->
+              <div class="dh-actor-card actor-alice">
+                <div class="dh-actor-avatar">A</div>
+                <h4 style="margin-bottom:var(--space-2); color:var(--primary-700);">Alice</h4>
+                <div style="font-family:var(--font-mono); font-size:0.8rem; text-align:left; display:flex; flex-direction:column; gap:6px;">
+                  <div style="background:#ffffff; padding:4px 6px; border-radius:4px; border:1px solid var(--border-color);">
+                    <span style="color:#dc2626; font-size:0.7rem; font-weight:700;">[PRIVATE SECRET]:</span>
+                    <div>a = <span id="dhAlicePrivDisp">6</span></div>
+                  </div>
+                  <div style="background:#ffffff; padding:4px 6px; border-radius:4px; border:1px solid var(--border-color);">
+                    <span style="color:var(--primary-600); font-size:0.7rem; font-weight:700;">[PUBLIC KEY A]:</span>
+                    <div>A = g^a mod p = <strong id="dhAlicePubDisp">8</strong></div>
+                  </div>
+                  <div style="background:var(--success-bg); padding:4px 6px; border-radius:4px; border:1px solid var(--success-border);">
+                    <span style="color:var(--success-text); font-size:0.7rem; font-weight:700;">[COMPUTED KEY K_A]:</span>
+                    <div>K_A = <strong id="dhAliceSecretDisp">2</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Channel / Eve Interception Column -->
+              <div class="dh-exchange-channel">
+                <!-- Message arrow A -> B -->
+                <div class="dh-message-arrow arrow-right">
+                  <span>Send Public A: <strong>A = <span id="dhArrowValA">8</span></strong></span>
+                </div>
+
+                <!-- Eve Interceptor Box (shown if MitM active) -->
+                <div id="dhEveBox" style="display:none; width:100%; background:#fef2f2; border:2px dashed #dc2626; border-radius:var(--radius-md); padding:var(--space-3); text-align:center;">
+                  <div style="font-weight:700; color:#dc2626; font-size:0.85rem; margin-bottom:4px;">
+                    &triangle; EVE INTERCEPTOR (ACTIVE MitM)
+                  </div>
+                  <p style="font-size:0.75rem; color:#991b1b; margin-bottom:4px;">
+                    Eve intercepts public keys A and B, replacing them with Eve's key E = g^e mod p.
+                  </p>
+                  <div style="font-family:var(--font-mono); font-size:0.75rem; color:#7f1d1d;">
+                    <div>Key with Alice: <strong id="dhEveAliceKey">--</strong></div>
+                    <div>Key with Bob: <strong id="dhEveBobKey">--</strong></div>
+                  </div>
+                </div>
+
+                <!-- Message arrow B -> A -->
+                <div class="dh-message-arrow arrow-left">
+                  <span>Send Public B: <strong>B = <span id="dhArrowValB">19</span></strong></span>
+                </div>
+              </div>
+
+              <!-- Bob Actor Column -->
+              <div class="dh-actor-card actor-bob">
+                <div class="dh-actor-avatar">B</div>
+                <h4 style="margin-bottom:var(--space-2); color:var(--cyan-700);">Bob</h4>
+                <div style="font-family:var(--font-mono); font-size:0.8rem; text-align:left; display:flex; flex-direction:column; gap:6px;">
+                  <div style="background:#ffffff; padding:4px 6px; border-radius:4px; border:1px solid var(--border-color);">
+                    <span style="color:#dc2626; font-size:0.7rem; font-weight:700;">[PRIVATE SECRET]:</span>
+                    <div>b = <span id="dhBobPrivDisp">15</span></div>
+                  </div>
+                  <div style="background:#ffffff; padding:4px 6px; border-radius:4px; border:1px solid var(--border-color);">
+                    <span style="color:var(--cyan-600); font-size:0.7rem; font-weight:700;">[PUBLIC KEY B]:</span>
+                    <div>B = g^b mod p = <strong id="dhBobPubDisp">19</strong></div>
+                  </div>
+                  <div style="background:var(--success-bg); padding:4px 6px; border-radius:4px; border:1px solid var(--success-border);">
+                    <span style="color:var(--success-text); font-size:0.7rem; font-weight:700;">[COMPUTED KEY K_B]:</span>
+                    <div>K_B = <strong id="dhBobSecretDisp">2</strong></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Agreement Result Box -->
+            <div id="dhAgreementResultBox" class="dh-shared-secret-box">
+              &check; Shared Secret Agreement Succeeded: Both Alice and Bob computed K = 2
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="dhPosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>W. Diffie and M. E. Hellman.</strong> "New Directions in Cryptography." <em>IEEE Transactions on Information Theory</em>, Vol. IT-22, No. 6 (1976), pp. 644–654.
+            </li>
+            <li>
+              <strong>IETF RFC 3526.</strong> <em>More Modular Exponential (MODP) Diffie-Hellman groups for Internet Key Exchange (IKE)</em>. 2003.
+            </li>
+            <li>
+              <strong>William Stallings.</strong> <em>Cryptography and Network Security</em> (8th Edition), Chapter 10: Key Management and Diffie-Hellman Key Exchange. Pearson, 2020.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Pagination Footer -->
+      <div class="exp-pagination-nav">
+        <a href="rsa.html" class="exp-nav-btn">
+          ← Previous: 05. RSA Cryptography
+        </a>
+        <a href="sha1.html" class="exp-nav-btn">
+          Next: 07. SHA-1 Message Digest →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+            <li><a href="rsa.html">05. RSA Cryptography</a></li>
+            <li><a href="diffie-hellman.html">06. Diffie-Hellman Key Exchange</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://tools.ietf.org/html/rfc3526" target="_blank" rel="noopener">RFC 3526 (MODP Groups)</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/diffie-hellman.js"></script>
+
+  <script>
+    function loadDHPreset(p, g, a, b) {
+      document.getElementById('dhPrimeP').value = p;
+      document.getElementById('dhGenG').value = g;
+      document.getElementById('dhPrivA').value = a;
+      document.getElementById('dhPrivB').value = b;
+      runDiffieHellman();
+    }
+
+    function runDiffieHellman() {
+      Validation.clearError('dhAlertContainer');
+      const p = document.getElementById('dhPrimeP').value;
+      const g = document.getElementById('dhGenG').value;
+      const a = document.getElementById('dhPrivA').value;
+      const b = document.getElementById('dhPrivB').value;
+      const isMitm = document.getElementById('dhMitmToggle').checked;
+
+      const res = isMitm
+        ? DiffieHellman.calculateMitM(p, g, a, b, 7)
+        : DiffieHellman.calculateStandard(p, g, a, b);
+
+      if (!res.success) {
+        Validation.showError('dhAlertContainer', res.error);
+        return;
+      }
+
+      // Update Alice & Bob displays
+      document.getElementById('dhAlicePrivDisp').textContent = res.a;
+      document.getElementById('dhAlicePubDisp').textContent = res.A;
+      document.getElementById('dhBobPrivDisp').textContent = res.b;
+      document.getElementById('dhBobPubDisp').textContent = res.B;
+      document.getElementById('dhArrowValA').textContent = res.A;
+      document.getElementById('dhArrowValB').textContent = res.B;
+
+      const eveBox = document.getElementById('dhEveBox');
+      const resultBox = document.getElementById('dhAgreementResultBox');
+
+      if (isMitm) {
+        eveBox.style.display = 'block';
+        document.getElementById('dhEveAliceKey').textContent = res.kAliceEve;
+        document.getElementById('dhEveBobKey').textContent = res.kBobEve;
+
+        document.getElementById('dhAliceSecretDisp').textContent = res.kAliceEve;
+        document.getElementById('dhBobSecretDisp').textContent = res.kBobEve;
+
+        resultBox.className = 'dh-shared-secret-box alert-danger';
+        resultBox.style.backgroundColor = 'var(--danger-bg)';
+        resultBox.style.color = 'var(--danger-text)';
+        resultBox.style.borderColor = 'var(--danger-border)';
+        resultBox.innerHTML = `
+          &triangle; <strong>Man-in-the-Middle Attack Succeeded!</strong>
+          <br>Alice established secret key (${res.kAliceEve}) with Eve; Bob established separate key (${res.kBobEve}) with Eve.
+          Neither party detected the interception because unauthenticated Diffie-Hellman lacks identity verification.
+        `;
+        MainApp.showToast('MitM attack simulation evaluated.');
+      } else {
+        eveBox.style.display = 'none';
+        document.getElementById('dhAliceSecretDisp').textContent = res.kAlice;
+        document.getElementById('dhBobSecretDisp').textContent = res.kBob;
+
+        resultBox.className = 'dh-shared-secret-box';
+        resultBox.style.backgroundColor = 'var(--success-bg)';
+        resultBox.style.color = 'var(--success-text)';
+        resultBox.style.borderColor = 'var(--success-border)';
+        resultBox.innerHTML = `&check; Shared Secret Agreement Succeeded: Both Alice and Bob computed K = ${res.sharedSecret}`;
+        MainApp.showToast('Diffie-Hellman key agreement established.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      QuizEngine.renderQuiz('diffie-hellman', 'pretest', 'dhPretestContainer');
+      QuizEngine.renderQuiz('diffie-hellman', 'posttest', 'dhPosttestContainer');
+      runDiffieHellman();
+    });
+  </script>
+</body>
+</html>

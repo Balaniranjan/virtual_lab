@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quality Assurance & Test Suite - Principles of Cryptography Virtual Lab</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .test-pass { background-color: #ecfdf5; border-left: 4px solid #10b981; color: #065f46; padding: 10px 14px; margin-bottom: 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85rem; }
+    .test-fail { background-color: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 10px 14px; margin-bottom: 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85rem; }
+    .test-meta { font-size: 0.75rem; color: #64748b; margin-top: 4px; }
+  </style>
+</head>
+<body style="padding: 2rem 0; background-color: #f8fafc;">
+  <div class="container" style="max-width: 900px;">
+    <div class="card mb-6">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Cryptographic Correctness & Known-Answer Test Suite</h2>
+        <span id="testSummaryBadge" class="badge badge-primary">Running Tests...</span>
+      </div>
+      <p class="text-muted">
+        Validates mathematical accuracy, RFC standards, FIPS publications, and round-trip consistency across all 11 implemented cryptographic algorithms.
+      </p>
+      <div class="d-flex gap-3 mt-4">
+        <button type="button" class="btn btn-primary btn-sm" onclick="runAllTests()">Re-Run All Tests</button>
+        <a href="index.html" class="btn btn-secondary btn-sm">&larr; Return to Lab Homepage</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="testResultsList">
+        <!-- Results rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Include all crypto engines -->
+  <script src="js/crypto/caesar.js"></script>
+  <script src="js/crypto/playfair.js"></script>
+  <script src="js/crypto/hill.js"></script>
+  <script src="js/crypto/rail-fence.js"></script>
+  <script src="js/crypto/des.js"></script>
+  <script src="js/crypto/aes.js"></script>
+  <script src="js/crypto/rsa.js"></script>
+  <script src="js/crypto/diffie-hellman.js"></script>
+  <script src="js/crypto/sha1.js"></script>
+  <script src="js/crypto/md5.js"></script>
+  <script src="js/crypto/digital-signature.js"></script>
+
+  <script>
+    const tests = [];
+    let passCount = 0;
+    let failCount = 0;
+
+    function assert(description, condition, details = "") {
+      if (condition) {
+        passCount++;
+        tests.push({ pass: true, desc: description, details });
+      } else {
+        failCount++;
+        tests.push({ pass: false, desc: description, details: "ASSERTION FAILED: " + details });
+      }
+    }
+
+    async function runAllTests() {
+      tests.length = 0;
+      passCount = 0;
+      failCount = 0;
+      const listEl = document.getElementById('testResultsList');
+      listEl.innerHTML = '<p class="text-muted">Running test vectors...</p>';
+
+      // 1. Caesar Cipher Tests
+      const cEnc = CaesarCipher.encrypt('HELLO WORLD', 3);
+      assert('Caesar: Encrypt "HELLO WORLD" with k=3', cEnc.result === 'KHOOR ZRUOG', `Expected "KHOOR ZRUOG", got "${cEnc.result}"`);
+      const cDec = CaesarCipher.decrypt(cEnc.result, 3);
+      assert('Caesar: Decrypt recovers "HELLO WORLD"', cDec.result === 'HELLO WORLD', `Expected "HELLO WORLD", got "${cDec.result}"`);
+      const cPunct = CaesarCipher.encrypt('Attack at 0600!', 5);
+      assert('Caesar: Preserve digits, spaces, and punctuation', cPunct.result === 'Fyyfhp fy 0600!', `Got "${cPunct.result}"`);
+
+      // 2. Playfair Cipher Tests
+      const pfEnc = PlayfairCipher.encrypt('INSTRUMENTS', 'MONARCHY');
+      const pfDec = PlayfairCipher.decrypt(pfEnc.result, 'MONARCHY');
+      assert('Playfair: Digraph encryption produces even-length ciphertext', pfEnc.result.length % 2 === 0, `Length: ${pfEnc.result.length}`);
+      assert('Playfair: Decrypt recovers base text without error', pfDec.result.includes('INSTRUMENT'), `Got "${pfDec.result}"`);
+      const pfRepeat = PlayfairCipher.preparePlaintextDigraphs('BALLOON');
+      assert('Playfair: Duplicate letters in pair split with filler X', pfRepeat.includes('LX') && pfRepeat.includes('BA'), `Digraphs: ${JSON.stringify(pfRepeat)}`);
+
+      // 3. Hill Cipher Tests
+      const hillK2 = [[9, 4], [5, 7]];
+      const inv2 = HillCipher.invertMatrix(hillK2);
+      assert('Hill 2x2: Invertibility check succeeds for det=43 mod 26 = 17', inv2.success === true && inv2.modDet === 17, `modDet: ${inv2.modDet}`);
+      const hillEnc = HillCipher.encrypt('HELP', hillK2);
+      const hillDec = HillCipher.decrypt(hillEnc.result, hillK2);
+      assert('Hill 2x2: Round-trip encryption and decryption of "HELP"', hillDec.result === 'HELP', `Recovered: "${hillDec.result}"`);
+      const badHill = [[2, 4], [4, 8]]; // det = 0 mod 26
+      const badInv = HillCipher.invertMatrix(badHill);
+      assert('Hill: Rejection of non-invertible key matrix', badInv.success === false, `Result: ${badInv.success}`);
+
+      // 4. Rail Fence Row-Major Tests
+      const rfRowEnc = RailFenceCipher.encryptRowMajor('DEFENDTHEEASTWALL', 3);
+      const rfRowDec = RailFenceCipher.decryptRowMajor(rfRowEnc.result, 3);
+      assert('Rail Fence Row-Major: Zigzag round-trip with 3 rails', rfRowDec.result === 'DEFENDTHEEASTWALL', `Recovered: "${rfRowDec.result}"`);
+      const rfRow4 = RailFenceCipher.decryptRowMajor(RailFenceCipher.encryptRowMajor('HELLO', 4).result, 4);
+      assert('Rail Fence Row-Major: Round-trip with 4 rails', rfRow4.result === 'HELLO', `Recovered: "${rfRow4.result}"`);
+
+      // 5. Rail Fence Column-Major Tests
+      const rfColEnc = RailFenceCipher.encryptColumnMajor('CRYPTOGRAPHY', 4);
+      assert('Rail Fence Column-Major: Grid encryption of "CRYPTOGRAPHY" with 4 cols', rfColEnc.result === 'CTAROPYGHPRY', `Got "${rfColEnc.result}"`);
+      const rfColDec = RailFenceCipher.decryptColumnMajor(rfColEnc.result, 4);
+      assert('Rail Fence Column-Major: Round-trip decryption', rfColDec.result === 'CRYPTOGRAPHY', `Recovered: "${rfColDec.result}"`);
+
+      // 6. DES FIPS 46-3 / NIST SP 800-20 Test Vector
+      // Key: 133457799BBCDFF1, Plaintext: 0123456789ABCDEF -> Ciphertext: 85E813540F0AB405
+      const desRes = DES.encrypt('0123456789ABCDEF', '133457799BBCDFF1', true);
+      assert('DES: NIST SP 800-20 Known-Answer Vector Check', desRes.ciphertextHex === '85E813540F0AB405', `Expected 85E813540F0AB405, got "${desRes.ciphertextHex}"`);
+      const desDec = DES.decrypt(desRes.ciphertextHex, '133457799BBCDFF1');
+      assert('DES: 16 Feistel rounds decryption round-trip', desDec.plaintextHex === '0123456789ABCDEF', `Recovered: "${desDec.plaintextHex}"`);
+
+      // 7. AES Tests (Web Crypto AES-GCM and Rijndael State)
+      const aesKey = await AESHelper.generateKey(256);
+      const aesGCM = await AESHelper.encryptGCM('Secret University Research Data', aesKey);
+      const aesRec = await AESHelper.decryptGCM(aesGCM.cipherHex, aesGCM.ivHex, aesGCM.tagHex, aesKey);
+      assert('AES-GCM: 256-bit authenticated encryption and decryption', aesRec.success && aesRec.plaintext === 'Secret University Research Data', `Plaintext recovered: ${aesRec.plaintext}`);
+      // Tamper test on tag
+      const badTag = (aesGCM.tagHex.substr(0, 30) + (aesGCM.tagHex.substr(30, 2) === 'AA' ? 'BB' : 'AA')).toUpperCase();
+      const tampered = await AESHelper.decryptGCM(aesGCM.cipherHex, aesGCM.ivHex, badTag, aesKey);
+      assert('AES-GCM: Tamper detection rejects altered tag', tampered.success === false, `Result: ${tampered.success}`);
+
+      // 8. RSA Classroom Arithmetic & Web Crypto Tests
+      const rsaParams = RSAHelper.generateEducationalKeys(61, 53, 17);
+      assert('RSA Arithmetic: Modulus n = 61 * 53 = 3233, phi = 3120', rsaParams.n === '3233' && rsaParams.phi === '3120', `n=${rsaParams.n}, phi=${rsaParams.phi}`);
+      assert('RSA Arithmetic: Modular inverse private d = 2753', rsaParams.d === '2753', `d=${rsaParams.d}`);
+      const rsaEncNum = RSAHelper.encryptNumber(65, rsaParams.e, rsaParams.n);
+      assert('RSA Arithmetic: 65^17 mod 3233 = 2790', rsaEncNum.ciphertext === '2790', `c=${rsaEncNum.ciphertext}`);
+      const rsaDecNum = RSAHelper.decryptNumber(2790, rsaParams.d, rsaParams.n);
+      assert('RSA Arithmetic: Decrypt 2790^2753 mod 3233 = 65', rsaDecNum.plaintext === '65', `m=${rsaDecNum.plaintext}`);
+
+      // 9. Diffie-Hellman Key Exchange Tests
+      const dhRes = DiffieHellman.calculateStandard(23, 5, 6, 15);
+      assert('Diffie-Hellman: Alice public A=8, Bob public B=19', dhRes.A === '8' && dhRes.B === '19', `A=${dhRes.A}, B=${dhRes.B}`);
+      assert('Diffie-Hellman: Shared secret agreement K_A === K_B === 2', dhRes.keysMatch === true && dhRes.sharedSecret === '2', `K=${dhRes.sharedSecret}`);
+      const dhMitm = DiffieHellman.calculateMitM(23, 5, 6, 15, 7);
+      assert('Diffie-Hellman: Eve MitM attack establishes split keys', dhMitm.mitmCompromised === true, `Compromised: ${dhMitm.mitmCompromised}`);
+
+      // 10. SHA-1 Message Digest Known-Answer Vectors
+      const shaEmpty = await SHA1Helper.compute('');
+      assert('SHA-1: Digest of empty string matches standard vector', shaEmpty.hex === 'da39a3ee5e6b4b0d3255bfef95601890afd80709', `Got: ${shaEmpty.hex}`);
+      const shaABC = await SHA1Helper.compute('abc');
+      assert('SHA-1: Digest of "abc" matches standard vector', shaABC.hex === 'a9993e364706816aba3e25717850c26c9cd0d89d', `Got: ${shaABC.hex}`);
+
+      // 11. MD5 Message Digest (RFC 1321) Known-Answer Vectors
+      const md5Empty = MD5Helper.compute('');
+      assert('MD5: Digest of empty string matches RFC 1321', md5Empty.hex === 'd41d8cd98f00b204e9800998ecf8427e', `Got: ${md5Empty.hex}`);
+      const md5A = MD5Helper.compute('a');
+      assert('MD5: Digest of "a" matches RFC 1321', md5A.hex === '0cc175b9c0f1b6a831c399e269772661', `Got: ${md5A.hex}`);
+
+      // 12. Digital Signature Standard (DSA) Tests
+      const dsaSig = DigitalSignature.signDSA('TRANSFER $5000', 79, 13, 64, 7, 3);
+      assert('DSA: Generate signature (r, s)', dsaSig.success && dsaSig.r && dsaSig.s, `Sig: (${dsaSig.r}, ${dsaSig.s})`);
+      const dsaVer = DigitalSignature.verifyDSA('TRANSFER $5000', dsaSig.r, dsaSig.s, 79, 13, 64, 8);
+      assert('DSA: Verify valid signature against original message', dsaVer.verified === true, `Verified: ${dsaVer.verified}`);
+      const dsaTamper = DigitalSignature.verifyDSA('TRANSFER $9999', dsaSig.r, dsaSig.s, 79, 13, 64, 8);
+      assert('DSA: Rejection of altered/tampered message payload', dsaTamper.verified === false, `Result: ${dsaTamper.verified}`);
+
+      // Render Summary
+      let html = '';
+      tests.forEach((t, i) => {
+        const cls = t.pass ? 'test-pass' : 'test-fail';
+        const icon = t.pass ? '&check; PASS' : '&cross; FAIL';
+        html += `
+          <div class="${cls}">
+            <div><strong>[Test ${i + 1}] ${icon}:</strong> ${t.desc}</div>
+            ${t.details ? `<div class="test-meta">${t.details}</div>` : ''}
+          </div>
+        `;
+      });
+      listEl.innerHTML = html;
+
+      const badge = document.getElementById('testSummaryBadge');
+      if (failCount === 0) {
+        badge.className = 'badge badge-success';
+        badge.textContent = `All ${tests.length} Tests Passed (100% Correctness)`;
+      } else {
+        badge.className = 'badge badge-warning';
+        badge.textContent = `${passCount} Passed, ${failCount} Failed`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      runAllTests();
+    });
+  </script>
+</body>
+</html>

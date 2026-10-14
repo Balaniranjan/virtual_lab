@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Experiment 07: SHA-1 Message Digest - 160-bit cryptographic hashing, Avalanche Effect analyzer, Merkle-Damgård structure, and SHAttered collision analysis.">
+  <title>Experiment 07: SHA-1 Message Digest - Virtual Lab</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/experiments.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-top-banner">
+    <div class="container">
+      <div class="gov-banner-left">
+        <span class="gov-banner-dept" data-config="department">Department of Computer Science and Engineering</span>
+        <span class="gov-banner-badge">Academic Virtual Laboratory</span>
+      </div>
+      <div>
+        <span style="font-size: 0.775rem; color: #94a3b8;">Course: <strong style="color: #cbd5e1;" data-config="course">Principles of Cryptography</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="../index.html" class="brand-link">
+        <div class="brand-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12v3"/>
+          </svg>
+        </div>
+        <div class="brand-text-group">
+          <span class="brand-title">Principles of Cryptography Virtual Lab</span>
+          <span class="brand-subtitle">Interactive Experiments in Classical and Modern Cryptography</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../introduction.html" class="nav-link">Introduction</a>
+        <a href="../objectives.html" class="nav-link">Objectives</a>
+        <a href="../experiments.html" class="nav-link active">Experiments</a>
+        <a href="../resources.html" class="nav-link">Resources</a>
+        <a href="../feedback.html" class="nav-link">Feedback</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="search-trigger-btn" onclick="MainApp.openSearchModal()" aria-label="Search experiments">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span>Search...</span>
+          <span class="search-shortcut-badge">/</span>
+        </button>
+
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs-bar">
+    <div class="container">
+      <ul class="breadcrumbs-list">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="../experiments.html">Experiments</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">07. SHA-1 Message Digest</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <main class="site-main">
+    <div class="container">
+
+      <!-- Experiment Header -->
+      <div class="experiment-header">
+        <div class="experiment-meta-top">
+          <span class="experiment-num-label">EXPERIMENT 07</span>
+          <span class="experiment-category-badge">Hashing & Integrity</span>
+        </div>
+        <h1 class="experiment-title">Secure Hash Algorithm 1 (SHA-1): Digest Mechanics & Avalanche Analysis</h1>
+        <p class="experiment-desc">
+          Evaluate 160-bit cryptographic hash functions, investigate the Merkle-Damgård iterative compression structure, quantify the Avalanche Effect via bit Hamming distances, and review the 2017 SHAttered collision attack.
+        </p>
+      </div>
+
+      <!-- Deprecation Warning -->
+      <div class="legacy-warning-alert">
+        <span class="legacy-warning-badge">Deprecated for Signatures</span>
+        <div>
+          <strong>Security Deprecation Notice:</strong> SHA-1 is cryptographically broken for collision resistance. Practical collisions were generated in 2017 ("SHAttered"). NIST has prohibited SHA-1 for digital signatures since 2011 and mandates full phase-out by December 31, 2030. Use SHA-256 or SHA-3 for modern security designs.
+        </div>
+      </div>
+
+      <!-- 8-Tab Navigation -->
+      <nav class="experiment-tabs-nav" aria-label="Experiment Sections">
+        <button type="button" class="exp-tab-btn active" data-tab="aim">Aim</button>
+        <button type="button" class="exp-tab-btn" data-tab="theory">Theory</button>
+        <button type="button" class="exp-tab-btn" data-tab="procedure">Procedure</button>
+        <button type="button" class="exp-tab-btn" data-tab="pretest">Pretest</button>
+        <button type="button" class="exp-tab-btn" data-tab="demo">Demo</button>
+        <button type="button" class="exp-tab-btn" data-tab="practice">Practice <span class="tab-badge">Interactive</span></button>
+        <button type="button" class="exp-tab-btn" data-tab="posttest">Posttest</button>
+        <button type="button" class="exp-tab-btn" data-tab="references">References</button>
+      </nav>
+
+      <!-- ===================================================================
+           TAB 1: AIM
+           =================================================================== -->
+      <section class="tab-panel active" id="tab-aim">
+        <div class="card mb-6">
+          <h2 class="mb-4">Aim of the Experiment</h2>
+          <p class="academic-lead">
+            To calculate, analyze, and test message digests produced by the SHA-1 algorithm, differentiating one-way hashing from symmetric encryption, quantifying the Avalanche Effect across minor input mutations, and studying collision vulnerabilities.
+          </p>
+          <h3 class="mt-6 mb-3">Key Learning Outcomes</h3>
+          <ul>
+            <li>Differentiate between one-way hash functions (unkeyed, fixed-length digests) and encryption (keyed, reversible ciphers).</li>
+            <li>Compute standards-compatible 160-bit SHA-1 message digests (40 hexadecimal characters).</li>
+            <li>Inspect the Merkle-Damgård padding and 512-bit block compression across 80 round steps.</li>
+            <li>Measure the Avalanche Effect by calculating the exact bit difference (Hamming distance) between hashes of subtly different inputs.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: THEORY
+           =================================================================== -->
+      <section class="tab-panel" id="tab-theory">
+        <div class="card mb-6">
+          <h2>Theoretical Principles of SHA-1</h2>
+
+          <h3 class="mt-6 mb-3">1. Hashing vs. Encryption</h3>
+          <div style="overflow-x: auto; margin-bottom: var(--space-4);">
+            <table style="font-size: 0.875rem;">
+              <thead>
+                <tr>
+                  <th>Characteristic</th>
+                  <th>Cryptographic Hash (e.g. SHA-1, SHA-256)</th>
+                  <th>Symmetric / Asymmetric Encryption</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Directionality</strong></td>
+                  <td>Strictly <strong>one-way</strong> (pre-image resistant)</td>
+                  <td><strong>Two-way</strong> (reversible with decryption key)</td>
+                </tr>
+                <tr>
+                  <td><strong>Key Requirement</strong></td>
+                  <td>No key required (deterministic public function)</td>
+                  <td>Mandatory secret or private key required</td>
+                </tr>
+                <tr>
+                  <td><strong>Output Length</strong></td>
+                  <td>Strictly <strong>fixed length</strong> (160 bits for SHA-1)</td>
+                  <td>Variable (scales with plaintext block size)</td>
+                </tr>
+                <tr>
+                  <td><strong>Primary Purpose</strong></td>
+                  <td>Data integrity verification & digital signatures</td>
+                  <td>Data confidentiality (privacy)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>2. Algorithmic Architecture (FIPS PUB 180-1)</h3>
+          <p>
+            SHA-1 processes arbitrary-length messages up to <code>2^{64} - 1</code> bits in <strong>512-bit blocks (16 words of 32 bits)</strong>, producing a <strong>160-bit digest</strong>.
+          </p>
+          <ol style="margin-left: var(--space-4); line-height: 1.8;">
+            <li><strong>Padding:</strong> Append a single '1' bit, followed by necessary '0' bits until message length &equiv; 448 mod 512. Then append a 64-bit integer representing original bit length.</li>
+            <li><strong>Chaining Variables:</strong> Five 32-bit registers initialized to constants:
+              <br><code>H_0 = 0x67452301, H_1 = 0xEFCDAB89, H_2 = 0x98BADCFE, H_3 = 0x10325476, H_4 = 0xC3D2E1F0</code>.
+            </li>
+            <li><strong>Message Expansion:</strong> Expand 16 words <code>W_0 ... W_{15}</code> into 80 words <code>W_0 ... W_{79}</code> via bitwise XOR and circular left rotation:
+              <code>W_t = S^1(W_{t-3} &oplus; W_{t-8} &oplus; W_{t-14} &oplus; W_{t-16})</code>.
+            </li>
+            <li><strong>80 Round Steps:</strong> Four 20-step rounds applying different non-linear functions (Ch, Parity, Maj) and additive constants.</li>
+          </ol>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: var(--space-6) 0;">
+
+          <h3>3. The 2017 "SHAttered" Collision Attack</h3>
+          <p>
+            In February 2017, researchers from CWI Amsterdam and Google announced <strong>SHAttered</strong>, the first practical collision attack against SHA-1. By performing approximately <code>9 \times 10^{18}</code> SHA-1 computations, they generated two distinct PDF documents with different visual contents that yielded the identical SHA-1 hash digest:
+            <br>
+            <code>38762cf7f55934b34d179ae6a4c80cadccbb7f0a</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PROCEDURE
+           =================================================================== -->
+      <section class="tab-panel" id="tab-procedure">
+        <div class="card mb-6">
+          <h2>Simulation Procedure</h2>
+          <ol style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>Navigate to the <strong>Practice</strong> tab.</li>
+            <li>Enter any ASCII text into the input message field.</li>
+            <li>Click <strong>Calculate SHA-1 Digest</strong>.</li>
+            <li>Examine the 40-character hexadecimal digest, length indicators (160 bits / 20 bytes), and copy the output.</li>
+            <li>
+              <strong>Avalanche Effect Experiment:</strong>
+              <ul>
+                <li>Enter two slightly different strings into Input A and Input B (e.g. <code>The quick brown fox jumps over the lazy dog</code> vs <code>The quick brown fox jumps over the lazy cog</code>).</li>
+                <li>Click <strong>Analyze Avalanche Effect</strong>.</li>
+                <li>Observe the exact number of flipped output bits (Hamming distance) and confirm that approximately 50% of bits change.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: PRETEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-pretest">
+        <div id="sha1PretestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: DEMO
+           =================================================================== -->
+      <section class="tab-panel" id="tab-demo">
+        <div class="card mb-6">
+          <h2>Standard Known-Answer Test Vectors (FIPS 180-1)</h2>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-4);">
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid var(--primary-600);">
+              <strong>Vector 1: Empty String ("")</strong>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 4px;">
+                Digest: <code style="color:var(--primary-700);">da39a3ee5e6b4b0d3255bfef95601890afd80709</code> (160 bits)
+              </div>
+            </div>
+
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid var(--cyan-600);">
+              <strong>Vector 2: "abc"</strong>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 4px;">
+                Digest: <code style="color:var(--cyan-700);">a9993e364706816aba3e25717850c26c9cd0d89d</code>
+              </div>
+            </div>
+
+            <div style="background-color: var(--bg-surface-alt); padding: var(--space-4); border-radius: var(--radius-md); border-left: 4px solid #10b981;">
+              <strong>Vector 3: "The quick brown fox jumps over the lazy dog"</strong>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 4px;">
+                Digest: <code style="color:#065f46;">2fd4e1c67a2d28fced849ee1bb76e7391b93eb12</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PRACTICE (INTERACTIVE WORKSPACE)
+           =================================================================== -->
+      <section class="tab-panel" id="tab-practice">
+
+        <!-- PART 1: Standard Calculator -->
+        <div class="card mb-8">
+          <div class="card-header">
+            <h3 class="card-title">SHA-1 Message Digest Calculator</h3>
+            <span class="badge badge-primary">FIPS 180-1</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="sha1InputText">Message Input</label>
+            <textarea id="sha1InputText" class="form-textarea form-mono" rows="3" placeholder="Type text to calculate SHA-1 hash...">The quick brown fox jumps over the lazy dog</textarea>
+          </div>
+
+          <div class="d-flex gap-3 mb-6">
+            <button type="button" class="btn btn-primary" onclick="runSHA1Calculate()">
+              Calculate Digest
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="clearSHA1()">
+              Clear Input & Output
+            </button>
+          </div>
+
+          <div class="form-group">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label" for="sha1OutputHex" style="margin:0;">SHA-1 Digest Output (Hexadecimal)</label>
+              <div class="d-flex gap-2">
+                <span class="badge badge-cyan" id="sha1BitLengthBadge">160 Bits</span>
+                <span class="badge badge-neutral">20 Bytes</span>
+                <span class="badge badge-neutral">40 Hex Chars</span>
+              </div>
+            </div>
+            <div class="input-with-action">
+              <input type="text" id="sha1OutputHex" class="form-input form-mono" readonly style="font-weight:700; color:var(--primary-700);">
+              <button type="button" class="copy-btn" onclick="MainApp.copyToClipboard('sha1OutputHex')">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PART 2: Avalanche Effect Analyzer -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Avalanche Effect & Bit-Level Sensitivity Analyzer</h3>
+            <span class="badge badge-neutral">Hamming Distance</span>
+          </div>
+
+          <p class="text-muted" style="font-size:0.9rem; margin-bottom:var(--space-4);">
+            A cryptographically strong hash exhibits an ideal avalanche effect when modifying a single bit changes approximately 50% of output bits. Test two inputs below:
+          </p>
+
+          <div class="avalanche-grid">
+            <div class="avalanche-card">
+              <label class="form-label" for="avalancheTextA">Input Message A</label>
+              <input type="text" id="avalancheTextA" class="form-input form-mono" value="The quick brown fox jumps over the lazy dog">
+              <div style="font-family:var(--font-mono); font-size:0.775rem; margin-top:var(--space-2); word-break:break-all;">
+                Digest A: <code id="avalancheDigestA" style="color:var(--primary-700); font-size:0.75rem;">--</code>
+              </div>
+            </div>
+
+            <div class="avalanche-card">
+              <label class="form-label" for="avalancheTextB">Input Message B (Single Character Altered)</label>
+              <input type="text" id="avalancheTextB" class="form-input form-mono" value="The quick brown fox jumps over the lazy cog">
+              <div style="font-family:var(--font-mono); font-size:0.775rem; margin-top:var(--space-2); word-break:break-all;">
+                Digest B: <code id="avalancheDigestB" style="color:var(--cyan-700); font-size:0.75rem;">--</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center mt-4">
+            <button type="button" class="btn btn-primary" onclick="runSHA1AvalancheAnalysis()">
+              Analyze Avalanche Effect (Hamming Distance)
+            </button>
+          </div>
+
+          <div id="avalancheScoreBanner" class="avalanche-diff-score" style="display:none;"></div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: POSTTEST
+           =================================================================== -->
+      <section class="tab-panel" id="tab-posttest">
+        <div id="sha1PosttestContainer"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 8: REFERENCES
+           =================================================================== -->
+      <section class="tab-panel" id="tab-references">
+        <div class="card mb-6">
+          <h2>Academic References</h2>
+          <ul style="line-height: 1.8; margin-top: var(--space-4);">
+            <li>
+              <strong>NIST.</strong> <em>Secure Hash Standard</em>, Federal Information Processing Standards Publication 180-4 (FIPS PUB 180-4). National Institute of Standards and Technology, 2015.
+            </li>
+            <li>
+              <strong>Marc Stevens, Elie Bursztein, Pierre Karpman, Ange Albertini, Yarik Markov.</strong> "The first collision for full SHA-1." <em>Advances in Cryptology – CRYPTO 2017</em>. Springer, 2017.
+            </li>
+            <li>
+              <strong>IETF RFC 3174.</strong> <em>US Secure Hash Algorithm 1 (SHA1)</em>. Internet Engineering Task Force, 2001.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Pagination Footer -->
+      <div class="exp-pagination-nav">
+        <a href="diffie-hellman.html" class="exp-nav-btn">
+          ← Previous: 06. Diffie-Hellman Key Exchange
+        </a>
+        <a href="md5.html" class="exp-nav-btn">
+          Next: 08. MD5 Message Digest →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Principles of Cryptography Virtual Lab</h4>
+          <p>An interactive educational platform designed for computer science students to visualize, execute, and analyze classical and modern cryptographic systems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../introduction.html">Introduction</a></li>
+            <li><a href="../objectives.html">Objectives</a></li>
+            <li><a href="../experiments.html">List of Experiments</a></li>
+            <li><a href="../resources.html">Learning Resources</a></li>
+            <li><a href="../feedback.html">Student Feedback</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Experiments</h4>
+          <ul class="footer-links">
+            <li><a href="classical-ciphers.html">01. Classical Ciphers</a></li>
+            <li><a href="transposition.html">02. Transposition Ciphers</a></li>
+            <li><a href="des.html">03. DES Algorithm</a></li>
+            <li><a href="aes.html">04. AES Algorithm</a></li>
+            <li><a href="sha1.html">07. SHA-1 Message Digest</a></li>
+            <li><a href="md5.html">08. MD5 Message Digest</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards</h4>
+          <ul class="footer-links">
+            <li><a href="https://csrc.nist.gov/publications/detail/fips/180-4/final" target="_blank" rel="noopener">NIST FIPS 180-4 (SHA)</a></li>
+            <li><a href="../resources.html">Full Reference List →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-disclaimer-bar">
+      <div class="container footer-disclaimer-content">
+        <div class="footer-disclaimer-text">
+          <strong>Educational Simulation Disclaimer:</strong> This virtual laboratory is built exclusively for university academic instruction and simulation purposes.
+        </div>
+        <div><span>© 2026 Virtual Labs Initiative. Open Educational Resource.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/assessments.js"></script>
+  <script src="../js/crypto/sha1.js"></script>
+
+  <script>
+    async function runSHA1Calculate() {
+      const text = document.getElementById('sha1InputText').value;
+      const res = await SHA1Helper.compute(text);
+      document.getElementById('sha1OutputHex').value = res.hex;
+      MainApp.showToast('SHA-1 digest calculated.');
+    }
+
+    function clearSHA1() {
+      document.getElementById('sha1InputText').value = '';
+      document.getElementById('sha1OutputHex').value = '';
+    }
+
+    async function runSHA1AvalancheAnalysis() {
+      const textA = document.getElementById('avalancheTextA').value;
+      const textB = document.getElementById('avalancheTextB').value;
+
+      const resA = await SHA1Helper.compute(textA);
+      const resB = await SHA1Helper.compute(textB);
+
+      document.getElementById('avalancheDigestA').textContent = resA.hex;
+      document.getElementById('avalancheDigestB').textContent = resB.hex;
+
+      const diff = SHA1Helper.calculateAvalanche(resA.hex, resB.hex);
+      const banner = document.getElementById('avalancheScoreBanner');
+      banner.style.display = 'block';
+      banner.innerHTML = `
+        <strong>Avalanche Effect Analysis:</strong>
+        ${diff.diffBits} out of ${diff.totalBits} bits flipped (<strong>${diff.percentage}% difference</strong>).
+        <br><span style="font-size:0.8rem; font-weight:normal;">Ideal cryptographic avalanche expectation: ~50.00%</span>
+      `;
+      MainApp.showToast(`Avalanche analyzed: ${diff.percentage}% bits changed.`);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      QuizEngine.renderQuiz('sha1', 'pretest', 'sha1PretestContainer');
+      QuizEngine.renderQuiz('sha1', 'posttest', 'sha1PosttestContainer');
+      await runSHA1Calculate();
+      await runSHA1AvalancheAnalysis();
+    });
+  </script>
+</body>
+</html>
