@@ -622,7 +622,7 @@
 }
 
 .quiz-score-summary {
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
   border: 2px solid var(--primary-600);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
@@ -636,4 +636,87 @@
   color: var(--primary-600);
   line-height: 1;
   margin: var(--space-2) 0;
+}
+
+/* ==========================================================================
+   Dark Mode Experiment Visualizer Overrides
+   ========================================================================== */
+[data-theme="dark"] .char-step-table th { background-color: var(--bg-surface-alt); color: var(--text-light); }
+[data-theme="dark"] .char-step-table td { background-color: var(--bg-surface); color: var(--text-main); }
+[data-theme="dark"] .char-step-table tr:hover td { background-color: var(--bg-surface-alt); }
+[data-theme="dark"] .cipher-matrix-grid { background-color: var(--bg-surface); border-color: var(--border-color); }
+[data-theme="dark"] .rail-grid-container { background-color: var(--bg-surface); border-color: var(--border-color); }
+[data-theme="dark"] .strip-cell { background-color: var(--bg-surface); color: var(--text-main); border-color: var(--border-color); }
+[data-theme="dark"] .feistel-round-card { background-color: var(--bg-surface); border-color: var(--border-color); color: var(--text-main); }
+[data-theme="dark"] .aes-byte-cell { background-color: var(--bg-surface); border-color: var(--border-color); color: var(--text-main); }
+[data-theme="dark"] .dh-exchange-container { background-color: var(--bg-surface); border-color: var(--border-color); }
+[data-theme="dark"] .dh-message-arrow { background-color: var(--bg-surface); border-color: var(--border-color); }
+[data-theme="dark"] .avalanche-card { background-color: var(--bg-surface); border-color: var(--border-color); }
+[data-theme="dark"] .quiz-question-card { background-color: var(--bg-surface); border-color: var(--border-color); }
+[data-theme="dark"] .interactive-step-header { background-color: var(--bg-surface); border-color: var(--border-color); }
+
+[data-theme="dark"] .matrix-cell {
+  background-color: var(--bg-surface-alt);
+  border-color: var(--border-color);
+  color: var(--text-main);
+}
+[data-theme="dark"] .matrix-cell.cell-highlight-first {
+  background-color: rgba(37, 99, 235, 0.35);
+  border-color: #3b82f6;
+  color: #bfdbfe;
+}
+[data-theme="dark"] .matrix-cell.cell-highlight-second {
+  background-color: rgba(6, 182, 212, 0.3);
+  border-color: #06b6d4;
+  color: #a5f3fc;
+}
+[data-theme="dark"] .matrix-cell.cell-target {
+  background-color: rgba(234, 179, 8, 0.25);
+  border-color: #eab308;
+  color: #fef08a;
+}
+[data-theme="dark"] .strip-cell.highlight {
+  background-color: rgba(37, 99, 235, 0.35);
+  color: #bfdbfe;
+  border-color: #3b82f6;
+}
+[data-theme="dark"] .sub-exp-selector {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .sub-exp-btn {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .sub-exp-btn:hover {
+  color: var(--text-main);
+  background-color: rgba(255, 255, 255, 0.06);
+}
+[data-theme="dark"] .sub-exp-btn.active {
+  background-color: var(--bg-surface-alt);
+  color: #60a5fa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+[data-theme="dark"] .quiz-option-label:hover {
+  background-color: var(--bg-surface-alt);
+  border-color: var(--border-focus);
+}
+[data-theme="dark"] .quiz-option-label.selected {
+  background-color: rgba(37, 99, 235, 0.25);
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+[data-theme="dark"] .quiz-option-label.correct {
+  background-color: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #6ee7b7;
+}
+[data-theme="dark"] .quiz-option-label.incorrect {
+  background-color: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+[data-theme="dark"] .avalanche-diff-score {
+  background-color: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.3);
+  color: #67e8f9;
 }

@@ -94,6 +94,56 @@
   --transition-normal: 0.25s ease;
 }
 
+/* ==========================================================================
+   Dark Theme Design Tokens
+   ========================================================================== */
+[data-theme="dark"] {
+  --bg-page: #0a0f1d;
+  --bg-surface: #111a2e;
+  --bg-surface-alt: #1a2642;
+  --bg-surface-elevated: #1e2c4d;
+  --bg-subtle: #0f172a;
+  
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+  --text-inverse: #0f172a;
+  
+  --border-color: #233354;
+  --border-focus: #60a5fa;
+  --border-subtle: #1a2642;
+  
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7), 0 4px 6px -4px rgba(0, 0, 0, 0.6);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.6);
+
+  /* Primary & Accent Palettes for Dark Backgrounds */
+  --primary-50: rgba(37, 99, 235, 0.18);
+  --primary-100: rgba(37, 99, 235, 0.28);
+  --primary-200: rgba(37, 99, 235, 0.38);
+
+  --cyan-50: rgba(6, 182, 212, 0.18);
+  --cyan-100: rgba(6, 182, 212, 0.28);
+
+  /* Status Colors (Tailored Contrast) */
+  --success-bg: rgba(16, 185, 129, 0.15);
+  --success-border: rgba(16, 185, 129, 0.3);
+  --success-text: #6ee7b7;
+
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --warning-border: rgba(245, 158, 11, 0.3);
+  --warning-text: #fde68a;
+
+  --danger-bg: rgba(239, 68, 68, 0.15);
+  --danger-border: rgba(239, 68, 68, 0.3);
+  --danger-text: #fca5a5;
+
+  --info-bg: rgba(59, 130, 246, 0.15);
+  --info-border: rgba(59, 130, 246, 0.3);
+  --info-text: #93c5fd;
+}
+
 /* Reset & Box Sizing */
 *, *::before, *::after {
   box-sizing: border-box;

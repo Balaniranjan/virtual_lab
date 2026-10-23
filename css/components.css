@@ -500,3 +500,18 @@
   gap: var(--space-3);
   background-color: var(--bg-surface-alt);
 }
+
+/* ==========================================================================
+   Dark Mode Component Overrides
+   ========================================================================== */
+[data-theme="dark"] .badge-primary { background: rgba(37, 99, 235, 0.25); color: #93c5fd; }
+[data-theme="dark"] .badge-cyan { background: rgba(6, 182, 212, 0.2); color: #67e8f9; }
+[data-theme="dark"] .badge-neutral { background: var(--bg-surface-alt); color: var(--text-muted); border-color: var(--border-color); }
+[data-theme="dark"] .legacy-warning-alert { background-color: rgba(234, 88, 12, 0.15); border-left-color: #f97316; color: #fdba74; }
+[data-theme="dark"] .btn-secondary { background-color: var(--bg-surface-alt); color: var(--text-main); border-color: var(--border-color); }
+[data-theme="dark"] .btn-secondary:hover { background-color: var(--bg-surface-elevated); border-color: var(--border-focus); color: #ffffff; }
+[data-theme="dark"] .btn-outline-primary:hover { background-color: rgba(37, 99, 235, 0.2); color: #93c5fd; }
+[data-theme="dark"] .copy-btn { background-color: var(--bg-surface-alt); border-color: var(--border-color); color: var(--text-muted); }
+[data-theme="dark"] .copy-btn:hover { background-color: rgba(37, 99, 235, 0.2); border-color: var(--primary-500); color: #93c5fd; }
+[data-theme="dark"] .form-input[readonly], [data-theme="dark"] .form-textarea[readonly] { background-color: var(--bg-surface-alt); color: var(--text-muted); }
+

@@ -115,6 +115,7 @@ const ExperimentsDirectory = [
 
 const MainApp = {
   init() {
+    ThemeManager.init();
     this.renderSearchModal();
     this.setupKeyboardShortcuts();
     this.populateConfigPlaceholders();
@@ -324,6 +325,51 @@ const MainApp = {
   }
 };
 
+/**
+ * Theme Manager - Dark & Light Mode Controller
+ */
+const ThemeManager = {
+  STORAGE_KEY: 'crypto_lab_theme',
+
+  init() {
+    const savedTheme = localStorage.getItem(this.STORAGE_KEY);
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    this.applyTheme(theme, false);
+
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem(this.STORAGE_KEY)) {
+          this.applyTheme(e.matches ? 'dark' : 'light', false);
+        }
+      });
+    }
+  },
+
+  applyTheme(theme, notify = false) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const toggleBtn = document.getElementById('themeToggleBtn');
+    if (toggleBtn) {
+      const isDark = theme === 'dark';
+      toggleBtn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      toggleBtn.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    if (notify && window.MainApp && typeof window.MainApp.showToast === 'function') {
+      window.MainApp.showToast(`${theme === 'dark' ? '🌙 Dark' : '☀️ Light'} mode activated`);
+    }
+  },
+
+  toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(this.STORAGE_KEY, newTheme);
+    this.applyTheme(newTheme, true);
+  }
+};
+
+// Initialize immediately
+ThemeManager.init();
+
 document.addEventListener('DOMContentLoaded', () => {
   MainApp.init();
 });
@@ -332,4 +378,5 @@ if (typeof window !== 'undefined') {
   window.SiteConfig = SiteConfig;
   window.ExperimentsDirectory = ExperimentsDirectory;
   window.MainApp = MainApp;
+  window.ThemeManager = ThemeManager;
 }
