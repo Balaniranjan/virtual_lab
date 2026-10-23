@@ -6,11 +6,15 @@
 const SiteConfig = {
   labName: "Principles of Cryptography Virtual Lab",
   subtitle: "Interactive Experiments in Classical and Modern Cryptography",
-  institution: "[Department / College Name]",
-  department: "Department of Computer Science and Engineering",
-  course: "Principles of Cryptography (CSE 401 / CS 352)",
+  institution: "SETHU INSTITUTE OF TECHNOLOGY",
+  department: "CSE(CYBER SECURITY)",
+  courseName: "Principles of Cryptography and Cyber Security Laboratory",
+  courseCode: "R21USY708",
+  course: "Principles of Cryptography and Cyber Security Laboratory (R21USY708)",
   semester: "[Semester / Academic Year]",
-  coordinator: "[Faculty Coordinator Name]",
+  coordinator: "Dr.K.Nagalakshmi",
+  headOfDepartment: "Dr.K.Nagalakshmi",
+  hod: "Dr.K.Nagalakshmi",
   contactEmail: "crypto.vlab@cse.institution.edu",
   version: "2.4.0 (Academic Edition)"
 };

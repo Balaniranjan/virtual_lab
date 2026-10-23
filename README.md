@@ -1,10 +1,11 @@
-# Principles of Cryptography Virtual Lab
-**Interactive College-Level Virtual Laboratory for Computer Science and Engineering**
+# Principles of Cryptography and Cyber Security Laboratory
+**Interactive College-Level Virtual Laboratory for CSE (Cyber Security)**
 
-> **Course:** Principles of Cryptography (CSE 401 / CS 352)  
-> **Department:** Department of Computer Science and Engineering  
-> **Institution:** [Department / College Name]  
-> **Faculty Coordinator:** [Faculty Coordinator Name]  
+> **Course:** Principles of Cryptography and Cyber Security Laboratory (R21USY708)  
+> **Course Code:** R21USY708  
+> **Department:** CSE(CYBER SECURITY)  
+> **Institution:** SETHU INSTITUTE OF TECHNOLOGY  
+> **Head of the Department:** Dr.K.Nagalakshmi  
 > **Architecture:** Pure HTML5, CSS3, Vanilla JavaScript (ES6+), and Web Cryptography API. Zero build tools or external frontend frameworks required.
 
 ---
