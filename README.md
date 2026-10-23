@@ -59,7 +59,6 @@ cryptography-virtual-lab/
 ├── objectives.html                # Measurable learning outcomes & Bloom's taxonomy matrix
 ├── experiments.html               # Experiment directory with category filters & progress tracking
 ├── resources.html                 # Core textbooks (Stallings, Menezes), NIST FIPS, and RFC standards
-├── feedback.html                  # Student & faculty evaluation form with local storage
 ├── tests.html                     # Automated cryptographic test suite (NIST & RFC test vectors)
 │
 ├── experiments/
