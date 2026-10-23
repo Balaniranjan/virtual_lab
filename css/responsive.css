@@ -1,19 +1,80 @@
 /* ==========================================================================
-   Principles of Cryptography Virtual Lab - Responsive Breakpoints & Accessibility
+   Principles of Cryptography Virtual Lab
+   Fully Responsive Layout — Mobile, Tablet, Laptop & Desktop
    ========================================================================== */
 
-/* Tablet & Smaller Desktops (< 1024px) */
+/* -----------------------------------------------------------------------
+   Shared Responsive Utility Grid Classes
+   Used across all pages via class="grid-X" helpers added to containers
+   ----------------------------------------------------------------------- */
+
+/* Hero Two-Column (1.25fr / 0.95fr) */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.95fr;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+/* Three-column discipline/area cards */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+/* Four-column workflow steps */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  text-align: center;
+}
+
+/* Two-column course alignment section */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+}
+
+/* Auto-fill responsive experiment cards grid */
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
+}
+
+/* ==========================================================================
+   LARGE DESKTOPS & WIDESCREEN (≥ 1280px)
+   ========================================================================== */
+@media (min-width: 1280px) {
+  .container {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+}
+
+/* ==========================================================================
+   LAPTOP / SMALL DESKTOP (< 1024px)
+   ========================================================================== */
 @media (max-width: 1024px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: var(--space-6);
   }
 
+  .hero-grid {
+    gap: var(--space-6);
+  }
+
+  /* Experiment workspace panels */
   .exp-workspace-grid {
     grid-template-columns: 1fr;
     gap: var(--space-6);
   }
 
+  /* Diffie-Hellman actor row */
   .dh-actors-row {
     grid-template-columns: 1fr;
     gap: var(--space-4);
@@ -23,17 +84,105 @@
     flex-direction: row;
     flex-wrap: wrap;
   }
+
+  /* Experiments page filter area */
+  .experiments-filter-bar {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* Experiment hero two-pane stacks at 1024px */
+  .exp-hero-two-col {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Tablets (< 768px) */
+/* ==========================================================================
+   TABLET (< 900px) — mid-range tablets and small laptops
+   ========================================================================== */
+@media (max-width: 900px) {
+  /* Hero section collapses to single column */
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  /* Hide the cipher pipeline illustration on medium viewports */
+  .hero-cipher-pipeline {
+    display: none;
+  }
+
+  /* 3-col → 2-col */
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  /* Experiments card grids */
+  #homeExperimentsGrid,
+  #experimentsListGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  /* 4-col workflow → 2-col */
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  /* 2-col course alignment → 1-col */
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  /* brand title font size trim */
+  .brand-title {
+    font-size: 1rem;
+  }
+
+  /* Search button — hide text label, show only icon */
+  .search-trigger-btn span:not(.search-shortcut-badge) {
+    display: none;
+  }
+
+  /* Generic: experiment sub-pages 3-col inline grids → 2-col at tablet */
+  .exp-panel [style*="repeat(3, 1fr)"],
+  .tab-panel [style*="repeat(3, 1fr)"],
+  [style*="grid-template-columns: repeat(3, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ==========================================================================
+   TABLET PORTRAIT / LARGE MOBILE (< 768px)
+   ========================================================================== */
 @media (max-width: 768px) {
   :root {
     --header-height: 64px;
   }
 
+  /* Base typography scale */
   h1 { font-size: 1.85rem; }
   h2 { font-size: 1.5rem; }
-  h3 { font-size: 1.25rem; }
+  h3 { font-size: 1.2rem; }
+  h4 { font-size: 1rem; }
+
+  /* Container padding */
+  .container {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  /* ── Header ── */
+  .brand-subtitle {
+    display: none;
+  }
+
+  .gov-top-banner {
+    display: none; /* Keep mobile header clean */
+  }
 
   /* Mobile Navigation Drawer */
   .mobile-nav-toggle {
@@ -76,14 +225,61 @@
     display: none;
   }
 
-  .brand-subtitle {
+  /* Search button — icon only on mobile */
+  .search-trigger-btn {
+    padding: 0.4rem 0.6rem;
+  }
+  .search-trigger-btn span {
+    display: none;
+  }
+  .search-shortcut-badge {
     display: none;
   }
 
-  .gov-top-banner {
-    display: none; /* Keep mobile view clean */
+  /* ── Hero ── */
+  .hero-grid {
+    grid-template-columns: 1fr;
   }
 
+  .hero-cipher-pipeline {
+    display: none;
+  }
+
+  .hero-section {
+    padding: var(--space-6) var(--space-4) !important;
+  }
+
+  /* Adjust h1 inside hero */
+  .hero-section h1 {
+    font-size: 1.9rem !important;
+  }
+
+  /* ── Content Grids ── */
+  .grid-3 {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  .grid-auto {
+    grid-template-columns: 1fr;
+  }
+
+  #homeExperimentsGrid,
+  #experimentsListGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── Experiments Page ── */
   .experiment-header {
     padding: var(--space-4);
   }
@@ -97,10 +293,11 @@
     font-size: 0.875rem;
   }
 
-  .avalanche-grid {
-    grid-template-columns: 1fr;
+  .experiment-tabs-nav {
+    gap: var(--space-1);
   }
 
+  /* ── Footer ── */
   .footer-grid {
     grid-template-columns: 1fr;
     gap: var(--space-6);
@@ -111,6 +308,17 @@
     text-align: center;
   }
 
+  /* ── Misc ── */
+  .avalanche-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Generic: inline grid overrides for experiment sub-pages */
+  [style*="grid-template-columns: repeat(3, 1fr)"],
+  [style*="grid-template-columns: repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
   .exp-pagination-nav {
     flex-direction: column;
     align-items: stretch;
@@ -119,29 +327,208 @@
   .exp-nav-btn {
     justify-content: center;
   }
+
+  /* Section cards padding */
+  .card,
+  .academic-section {
+    padding: var(--space-4);
+  }
+
+  /* Breadcrumbs condensed */
+  .breadcrumbs-bar {
+    font-size: 0.8rem;
+  }
+
+  /* Objectives / resources content tables */
+  table {
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Introduction page narrow container */
+  .container[style*="max-width: 960px"] {
+    max-width: 100% !important;
+  }
+
+  /* Workflow card section */
+  .workflow-card {
+    padding: var(--space-5) var(--space-4) !important;
+  }
+
+  /* Alert blocks */
+  .alert {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  /* Modal dialog */
+  .modal-dialog {
+    margin: var(--space-4);
+    width: calc(100% - 2rem);
+    max-height: calc(100vh - 2rem);
+  }
 }
 
-/* Mobile Phones (< 480px) */
+/* ==========================================================================
+   MOBILE PHONES (< 480px)
+   ========================================================================== */
 @media (max-width: 480px) {
+  :root {
+    --header-height: 60px;
+  }
+
+  /* Typography */
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+  h3 { font-size: 1.1rem; }
+
+  /* Container edges */
+  .container {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  /* Header logo */
+  .brand-logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .brand-title {
+    font-size: 0.9rem;
+    max-width: 170px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  /* Hero */
+  .hero-section h1 {
+    font-size: 1.6rem !important;
+  }
+
+  /* Buttons */
+  .btn-lg {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* 4-col → 1-col on small phones */
+  .grid-4 {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  /* 3-col and 2-col also collapse to 1-col on phones */
+  .grid-3,
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Generic: all inline repeat grids → 1-col on phones */
+  [style*="grid-template-columns: repeat(3, 1fr)"],
+  [style*="grid-template-columns: repeat(4, 1fr)"],
+  [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Sub-experiment buttons */
   .sub-exp-btn {
     min-width: 100%;
   }
 
+  /* Playfair matrix */
   .matrix-5x5 {
     grid-template-columns: repeat(5, 34px);
     grid-template-rows: repeat(5, 34px);
   }
-
   .matrix-cell {
     font-size: 0.9rem;
   }
 
-  .card, .academic-section, .exp-panel {
-    padding: var(--space-4);
+  /* Experiment panels */
+  .card,
+  .academic-section,
+  .exp-panel {
+    padding: var(--space-3);
+  }
+
+  /* Experiment tabs: allow horizontal scroll */
+  .experiment-tabs-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .experiment-tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .exp-tab-btn {
+    padding: 0.55rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  /* Modal: full-width on phones */
+  .modal-dialog {
+    margin: var(--space-2);
+    width: calc(100% - 1rem);
+    border-radius: var(--radius-md);
+  }
+
+  /* Toast */
+  .toast {
+    right: var(--space-3);
+    left: var(--space-3);
+    max-width: 100%;
+  }
+
+  /* Tables: horizontal scroll */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Experiment pagination */
+  .exp-pagination-nav {
+    gap: var(--space-2);
+  }
+
+  .exp-nav-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* FAQ details */
+  details.card {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  /* Search modal input */
+  #globalSearchInput {
+    font-size: 0.9rem;
   }
 }
 
-/* Accessibility: Reduced Motion */
+/* ==========================================================================
+   SMALL PHONES (< 360px) — edge case support
+   ========================================================================== */
+@media (max-width: 360px) {
+  .brand-title {
+    font-size: 0.8rem;
+    max-width: 140px;
+  }
+  .theme-toggle-btn {
+    width: 30px;
+    height: 30px;
+  }
+  .header-actions {
+    gap: var(--space-2);
+  }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY: Reduced Motion
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -151,9 +538,20 @@
   }
 }
 
-/* Print Stylesheet */
+/* ==========================================================================
+   PRINT STYLESHEET
+   ========================================================================== */
 @media print {
-  .site-header, .gov-top-banner, .site-footer, .exp-pagination-nav, .experiment-tabs-nav, .btn, .search-trigger-btn {
+  .site-header,
+  .gov-top-banner,
+  .site-footer,
+  .exp-pagination-nav,
+  .experiment-tabs-nav,
+  .btn,
+  .search-trigger-btn,
+  .theme-toggle-btn,
+  .mobile-nav-toggle,
+  .breadcrumbs-bar {
     display: none !important;
   }
 
@@ -162,9 +560,16 @@
     color: #000000;
   }
 
-  .academic-section, .card, .exp-panel {
+  .academic-section,
+  .card,
+  .exp-panel {
     border: 1px solid #cccccc;
     box-shadow: none;
     page-break-inside: avoid;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
   }
 }
